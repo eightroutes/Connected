@@ -1,18 +1,18 @@
 //
-//  5_preference.swift
+//  profileDetail.swift
 //  Connected
 //
-//  Created by 정근호 on 4/15/24.
+//  Created by 정근호 on 7/8/24.
 //
 
 import SwiftUI
 
-struct preference: View {
+struct profileDetail: View {
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    preference()
+    profileDetail()
 }

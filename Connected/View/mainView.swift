@@ -9,6 +9,8 @@ import SwiftUI
 
 struct mainView: View {
     @State private var selectedTab = 0
+    @State private var showProfileDetail = false
+    
     
     var body: some View {
         TabView(selection: $selectedTab){
@@ -16,15 +18,18 @@ struct mainView: View {
                 mainMap()
                 profile()
                     .padding(.bottom, 660)
+                    .sheet(isPresented: $showProfileDetail) {
+                        profileDetail()
+                    }
+                    .onAppear{selectedTab = 0}
+                    .tag(0)
             }
             .tabItem {
                 Image(systemName: selectedTab == 0 ? "house.fill" : "house")
                     .padding(.top, 10)
                     .environment(\.symbolVariants, selectedTab == 0 ?.fill: .none)
             }
-            .onAppear{selectedTab = 0}
-            .tag(0)
-            
+                        
             Text("Feed")
                 .tabItem {
                     Image(systemName: selectedTab == 1 ? "magnifyingglass" : "magnifyingglass")
@@ -40,7 +45,7 @@ struct mainView: View {
                 .onAppear{selectedTab = 4}
                 .tag(4)
             
-            Text("Message")
+            message()
                 .tabItem {
                     Image(systemName: selectedTab == 2 ? "message.fill" : "message")
                         .environment(\.symbolVariants, selectedTab == 2 ?.fill: .none)
@@ -72,6 +77,15 @@ struct mainView: View {
 }
 
 
+
+struct message: View {
+    
+    var body: some View{
+        Text("messages")
+
+    }
+    
+}
 
 
 

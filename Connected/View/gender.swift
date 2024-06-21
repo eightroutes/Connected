@@ -8,12 +8,16 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseAuth
 
 struct gender: View {
     
     @State private var showNextScreen = false
     @State private var selectedGender: String? = nil
     @State private var navigationPath = NavigationPath()
+    
+    let db = Firestore.firestore()
+
     
     
     enum Gender {
@@ -26,7 +30,7 @@ struct gender: View {
                 VStack {
                     ZStack {
                         Rectangle()
-                            .frame(width: UIScreen.main.bounds.width/6*3, height: 5)
+                            .frame(width: UIScreen.main.bounds.width/7*3, height: 5)
                             .padding(.leading, -200)
                         Rectangle()
                             .frame(width: UIScreen.main.bounds.width, height: 5)
@@ -73,6 +77,27 @@ struct gender: View {
                         if selectedGender != nil {
                             print("성별: \(selectedGender ?? "no sex")")
                             showNextScreen = true
+                        }
+                        Task {
+                           
+                            do {
+                                // 현재 로그인한 사용자의 UID 가져오기
+                                guard let userId = Auth.auth().currentUser?.uid else {
+                                    print("No user is signed in.")
+                                    return
+                                }
+                                
+                                // 사용자 UID를 사용하여 문서 업데이트 또는 생성
+                                try await db.collection("users").document(userId).setData([
+                                    "Gender": selectedGender
+                                ], merge: true)  // merge: true를 사용하여 기존 데이터를 유지하면서 업데이트
+                                
+                                print("Document updated for user: \(userId)")
+                                showNextScreen = true
+                            } catch {
+                                print("Error updating document: \(error)")
+                            }
+                            
                         }
                         
                     }) {
