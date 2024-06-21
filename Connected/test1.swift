@@ -58,26 +58,26 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-//
-//struct test1: View {
-//    @State private var showDetails = false
-//    
-//    var body: some View {
-//            VStack {
-//                Button(action: {
-//                    showDetails.toggle()
-//                }) {
-//                    Text("디테일 보기")
-//                }
-//     
-//                if showDetails {
-//                    Text("서근 개발블로그 구독 부탁드려요")
-//                        .font(.largeTitle)
-//                }
-//            }
-//        }
-//}
-//
-//#Preview {
-//    test1()
-//}
+
+struct test1: View {
+    @State private var showDetails = false
+    
+    var body: some View {
+            VStack {
+                Button(action: {
+                    showDetails.toggle()
+                }) {
+                    Text("디테일 보기")
+                }
+     
+                if showDetails {
+                    Text("서근 개발블로그 구독 부탁드려요")
+                        .font(.largeTitle)
+                }
+            }
+        }
+}
+
+#Preview {
+    test1()
+}
