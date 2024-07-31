@@ -37,7 +37,7 @@ struct mainView: View {
                 }
                 .onAppear{selectedTab = 1}
                 .tag(1)
-            Text("Searching New Friends")
+            connectFriends()
                 .tabItem {
                     Image(selectedTab == 4 ? "center" : "centerGray")
                         .environment(\.symbolVariants, selectedTab == 4 ?.fill: .none)
@@ -55,7 +55,7 @@ struct mainView: View {
             Text("Profile and Settings")
                 .tabItem {
                     
-                    Image(systemName: selectedTab == 2 ? "person.fill" : "person")
+                    Image(systemName: selectedTab == 3 ? "person.fill" : "person")
                         .environment(\.symbolVariants, selectedTab == 3 ?.fill: .none)
                 }
                 .onAppear{selectedTab = 3}
@@ -80,12 +80,18 @@ struct mainView: View {
 
 struct message: View {
     
-    var body: some View{
+    var body: some View {
         Text("messages")
+        
+        
 
     }
     
 }
+
+
+
+
 
 
 

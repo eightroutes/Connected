@@ -29,9 +29,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         
+        // KakaoTalk 로그인 URL 처리
         if (AuthApi.isKakaoTalkLoginUrl(url)) {
             return AuthController.handleOpenUrl(url: url)
         }
+        // Google 로그인 URL 처리
         return GIDSignIn.sharedInstance.handle(url)
     }
     
@@ -45,6 +47,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
 }
 
+// 카카오
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {

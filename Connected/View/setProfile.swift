@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import SwiftUI
 import FirebaseStorage
 import FirebaseCore
@@ -196,27 +195,5 @@ struct ImagePicker: UIViewControllerRepresentable {
             }
             parent.presentationMode.wrappedValue.dismiss()
         }
-=======
-//
-//  profileDetail.swift
-//  Connected
-//
-//  Created by 정근호 on 7/8/24.
-//
-
-import SwiftUI
-
-struct profileDetail: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
->>>>>>> 53f9b6c6476e54634b1ad518cb9013a42b8b140d
     }
-}
-
-#Preview {
-<<<<<<< HEAD
-    setProfile()
-=======
-    profileDetail()
->>>>>>> 53f9b6c6476e54634b1ad518cb9013a42b8b140d
 }
