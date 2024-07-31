@@ -21,6 +21,8 @@
 		662B85AB2C02F19B008F14E6 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 662B85AA2C02F19B008F14E6 /* FirebaseAnalyticsOnDeviceConversion */; };
 		662B85AD2C02F19B008F14E6 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 662B85AC2C02F19B008F14E6 /* FirebaseAnalyticsSwift */; };
 		662B85AF2C02F19B008F14E6 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 662B85AE2C02F19B008F14E6 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		662F28D72C62124400106ADE /* CropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 662F28D62C62124400106ADE /* CropViewController */; };
+		662F28D92C62124400106ADE /* TOCropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 662F28D82C62124400106ADE /* TOCropViewController */; };
 		66588E252C37D47100D70BCB /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 66588E242C37D47100D70BCB /* FirebaseStorage */; };
 		667BC57B2C2ED7E70008C302 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 667BC57A2C2ED7E70008C302 /* KakaoSDK */; };
 		667BC57D2C2ED7E70008C302 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 667BC57C2C2ED7E70008C302 /* KakaoSDKAuth */; };
@@ -31,10 +33,12 @@
 		66B5DF5B2BCCB95900272115 /* name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF5A2BCCB95900272115 /* name.swift */; };
 		66B5DF5D2BCCBA3000272115 /* birthday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF5C2BCCBA3000272115 /* birthday.swift */; };
 		66B5DF5F2BCCBA3900272115 /* gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF5E2BCCBA3900272115 /* gender.swift */; };
-		66B5DF612BCCBA5300272115 /* setProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF602BCCBA5300272115 /* setProfile.swift */; };
+		66B5DF612BCCBA5300272115 /* setImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF602BCCBA5300272115 /* setImages.swift */; };
 		66B5DF632BCCBA6500272115 /* aboutYourself.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF622BCCBA6500272115 /* aboutYourself.swift */; };
 		66B5DF652BCCBA7C00272115 /* interests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF642BCCBA7C00272115 /* interests.swift */; };
-		66B5DF672BCCC45600272115 /* profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF662BCCC45600272115 /* profile.swift */; };
+		66B5DF672BCCC45600272115 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF662BCCC45600272115 /* ProfileView.swift */; };
+		66B666502C61F69200357B9E /* ProfileImageSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6664F2C61F69200357B9E /* ProfileImageSetting.swift */; };
+		66D10B062C5B61400051EF2B /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D10B052C5B61400051EF2B /* FirestoreManager.swift */; };
 		66DCB9A22C2A8879000C7736 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 66DCB9A12C2A8879000C7736 /* GoogleSignIn */; };
 		66DCB9A42C2A8879000C7736 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 66DCB9A32C2A8879000C7736 /* GoogleSignInSwift */; };
 		66DCB9A62C2AB443000C7736 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 66DCB9A52C2AB443000C7736 /* GoogleService-Info.plist */; };
@@ -50,7 +54,6 @@
 		662830112BC35E180010EFAD /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		662830632BC443040010EFAD /* mainMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainMap.swift; sourceTree = "<group>"; };
 		662830652BC444480010EFAD /* mainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainView.swift; sourceTree = "<group>"; };
-		664CD0FC2C54A65D00C81D1F /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		66821AE92C098EB0007E39C1 /* test1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test1.swift; sourceTree = "<group>"; };
 		669215002BDF8ABD00E6A40A /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = test.swift; path = View/test.swift; sourceTree = "<group>"; };
 		66AA984E2C3BD49200FEAEDE /* profileDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = profileDetail.swift; sourceTree = "<group>"; };
@@ -58,10 +61,13 @@
 		66B5DF5A2BCCB95900272115 /* name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = name.swift; sourceTree = "<group>"; };
 		66B5DF5C2BCCBA3000272115 /* birthday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = birthday.swift; sourceTree = "<group>"; };
 		66B5DF5E2BCCBA3900272115 /* gender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gender.swift; sourceTree = "<group>"; };
-		66B5DF602BCCBA5300272115 /* setProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = setProfile.swift; sourceTree = "<group>"; };
+		66B5DF602BCCBA5300272115 /* setImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = setImages.swift; sourceTree = "<group>"; };
 		66B5DF622BCCBA6500272115 /* aboutYourself.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = aboutYourself.swift; sourceTree = "<group>"; };
 		66B5DF642BCCBA7C00272115 /* interests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = interests.swift; sourceTree = "<group>"; };
-		66B5DF662BCCC45600272115 /* profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = profile.swift; sourceTree = "<group>"; };
+		66B5DF662BCCC45600272115 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		66B6664F2C61F69200357B9E /* ProfileImageSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSetting.swift; sourceTree = "<group>"; };
+		66D10B022C5A384D0051EF2B /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		66D10B052C5B61400051EF2B /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		66DCB9A52C2AB443000C7736 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		66DCB9A72C2AB49B000C7736 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		66F5CE012C59D11800B9084F /* oauth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = oauth.swift; sourceTree = "<group>"; };
@@ -74,6 +80,8 @@
 			files = (
 				66DCB9A42C2A8879000C7736 /* GoogleSignInSwift in Frameworks */,
 				667BC57B2C2ED7E70008C302 /* KakaoSDK in Frameworks */,
+				662F28D92C62124400106ADE /* TOCropViewController in Frameworks */,
+				662F28D72C62124400106ADE /* CropViewController in Frameworks */,
 				6611D3C42C2ABB4600650D01 /* FirebaseAuth in Frameworks */,
 				66032B222C0DBA8A00517F96 /* IQKeyboardManagerSwift in Frameworks */,
 				66DCB9A22C2A8879000C7736 /* GoogleSignIn in Frameworks */,
@@ -109,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				66119A542C5A22F400DE35F4 /* connectFriends.swift */,
+				66D10B052C5B61400051EF2B /* FirestoreManager.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -116,6 +125,7 @@
 		66282FF52BC35B0B0010EFAD = {
 			isa = PBXGroup;
 			children = (
+				66D10B022C5A384D0051EF2B /* Config.xcconfig */,
 				662830002BC35B0B0010EFAD /* Connected */,
 				66282FFF2BC35B0B0010EFAD /* Products */,
 				6609BFD42C0D8E5200CC8C4E /* Frameworks */,
@@ -143,7 +153,6 @@
 				66DCB9A52C2AB443000C7736 /* GoogleService-Info.plist */,
 				662830052BC35B0C0010EFAD /* Assets.xcassets */,
 				662830072BC35B0C0010EFAD /* Preview Content */,
-				664CD0FC2C54A65D00C81D1F /* Config.xcconfig */,
 			);
 			path = Connected;
 			sourceTree = "<group>";
@@ -166,10 +175,11 @@
 				66B5DF5E2BCCBA3900272115 /* gender.swift */,
 				66B5DF622BCCBA6500272115 /* aboutYourself.swift */,
 				66B5DF642BCCBA7C00272115 /* interests.swift */,
-				66B5DF602BCCBA5300272115 /* setProfile.swift */,
+				66B6664F2C61F69200357B9E /* ProfileImageSetting.swift */,
+				66B5DF602BCCBA5300272115 /* setImages.swift */,
 				662830652BC444480010EFAD /* mainView.swift */,
 				662830632BC443040010EFAD /* mainMap.swift */,
-				66B5DF662BCCC45600272115 /* profile.swift */,
+				66B5DF662BCCC45600272115 /* ProfileView.swift */,
 				66AA984E2C3BD49200FEAEDE /* profileDetail.swift */,
 			);
 			path = View;
@@ -204,6 +214,8 @@
 				667BC57A2C2ED7E70008C302 /* KakaoSDK */,
 				667BC57C2C2ED7E70008C302 /* KakaoSDKAuth */,
 				66588E242C37D47100D70BCB /* FirebaseStorage */,
+				662F28D62C62124400106ADE /* CropViewController */,
+				662F28D82C62124400106ADE /* TOCropViewController */,
 			);
 			productName = Connected;
 			productReference = 66282FFE2BC35B0B0010EFAD /* Connected.app */;
@@ -217,7 +229,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1530;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					66282FFD2BC35B0B0010EFAD = {
 						CreatedOnToolsVersion = 15.3;
@@ -239,6 +251,7 @@
 				66032B202C0DBA8A00517F96 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				66DCB9A02C2A8879000C7736 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				667BC5792C2ED7E70008C302 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				662F28D52C62124400106ADE /* XCRemoteSwiftPackageReference "TOCropViewController" */,
 			);
 			productRefGroup = 66282FFF2BC35B0B0010EFAD /* Products */;
 			projectDirPath = "";
@@ -270,7 +283,7 @@
 				662830022BC35B0B0010EFAD /* ConnectedApp.swift in Sources */,
 				66821AEA2C098EB0007E39C1 /* test1.swift in Sources */,
 				66AA984F2C3BD49200FEAEDE /* profileDetail.swift in Sources */,
-				66B5DF672BCCC45600272115 /* profile.swift in Sources */,
+				66B5DF672BCCC45600272115 /* ProfileView.swift in Sources */,
 				66B5DF5F2BCCBA3900272115 /* gender.swift in Sources */,
 				669215012BDF8ABD00E6A40A /* test.swift in Sources */,
 				66119A552C5A22F400DE35F4 /* connectFriends.swift in Sources */,
@@ -278,11 +291,13 @@
 				66F5CE022C59D11800B9084F /* oauth.swift in Sources */,
 				662830642BC443040010EFAD /* mainMap.swift in Sources */,
 				66B5DF592BCCB82600272115 /* signIn.swift in Sources */,
+				66D10B062C5B61400051EF2B /* FirestoreManager.swift in Sources */,
 				66B5DF5B2BCCB95900272115 /* name.swift in Sources */,
+				66B666502C61F69200357B9E /* ProfileImageSetting.swift in Sources */,
 				66B5DF5D2BCCBA3000272115 /* birthday.swift in Sources */,
 				66B5DF632BCCBA6500272115 /* aboutYourself.swift in Sources */,
 				662830662BC444480010EFAD /* mainView.swift in Sources */,
-				66B5DF612BCCBA5300272115 /* setProfile.swift in Sources */,
+				66B5DF612BCCBA5300272115 /* setImages.swift in Sources */,
 				662830122BC35E180010EFAD /* SplashScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -292,10 +307,10 @@
 /* Begin XCBuildConfiguration section */
 		6628300A2BC35B0C0010EFAD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 664CD0FC2C54A65D00C81D1F /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -356,10 +371,10 @@
 		};
 		6628300B2BC35B0C0010EFAD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 664CD0FC2C54A65D00C81D1F /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -413,7 +428,6 @@
 		};
 		6628300D2BC35B0C0010EFAD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 664CD0FC2C54A65D00C81D1F /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -447,7 +461,6 @@
 		};
 		6628300E2BC35B0C0010EFAD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 664CD0FC2C54A65D00C81D1F /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -519,6 +532,14 @@
 				minimumVersion = 10.26.0;
 			};
 		};
+		662F28D52C62124400106ADE /* XCRemoteSwiftPackageReference "TOCropViewController" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TimOliver/TOCropViewController";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.4;
+			};
+		};
 		667BC5792C2ED7E70008C302 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -572,6 +593,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 662B85A72C02F19B008F14E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		662F28D62C62124400106ADE /* CropViewController */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 662F28D52C62124400106ADE /* XCRemoteSwiftPackageReference "TOCropViewController" */;
+			productName = CropViewController;
+		};
+		662F28D82C62124400106ADE /* TOCropViewController */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 662F28D52C62124400106ADE /* XCRemoteSwiftPackageReference "TOCropViewController" */;
+			productName = TOCropViewController;
 		};
 		66588E242C37D47100D70BCB /* FirebaseStorage */ = {
 			isa = XCSwiftPackageProductDependency;

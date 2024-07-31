@@ -60,12 +60,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 @main
 struct ConnectedApp: App {
+    @StateObject private var viewModel = signInViewModel()
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-
+    
     
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
+                .environmentObject(viewModel) // ViewModel을 환경 객체로 설정
         }
     }
 }

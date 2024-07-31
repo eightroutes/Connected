@@ -42,7 +42,6 @@ struct name: View {
                     Spacer()
                     Button(action: {
                         Task {
-                           
                             do {
                                 // 현재 로그인한 사용자의 UID 가져오기
                                 guard let userId = Auth.auth().currentUser?.uid else {
@@ -75,15 +74,14 @@ struct name: View {
                         NavigationLink(destination: birthday(), isActive: $showNextScreen) {
                             EmptyView()
                         }
-                            .hidden()
+                        .hidden()
                     )
                 }
             }
             .ignoresSafeArea(.keyboard)
         }
         .accentColor(.black)
-        .navigationBarBackButtonHidden(true)
-        
+//        .navigationBarBackButtonHidden(true)
     }
 }
 

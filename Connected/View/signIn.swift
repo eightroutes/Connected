@@ -7,7 +7,7 @@ import KakaoSDKUser
 import KakaoSDKAuth
 
 struct signIn: View {
-    @StateObject private var viewModel = SignInViewModel()
+    @StateObject private var viewModel = signInViewModel()
     @State private var showNextView = false
     
     var body: some View {
@@ -51,9 +51,10 @@ struct signIn: View {
                     Text(errorMessage)
                         .foregroundColor(.red)
                 }
-            
+                
             }
-            .navigationDestination(isPresented: $showNextView) {
+            .navigationDestination(isPresented: $showNextView)
+            {
                 name()
             }
         }
@@ -66,10 +67,22 @@ struct signIn: View {
     }
 }
 
-class SignInViewModel: ObservableObject {
+class signInViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isSignedIn = false
     
+    init() {
+        // 사용자 인증 상태 변경을 감지하여 `isSignedIn` 업데이트
+        Auth.auth().addStateDidChangeListener { auth, user in
+
+            if user != nil {
+                self.isSignedIn = true
+            } else {
+                self.isSignedIn = false
+            }
+        }
+    }
+    // MARK: - Google SignIn Function
     func googleLogin() {
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         
@@ -111,57 +124,57 @@ class SignInViewModel: ObservableObject {
     }
     
     // MARK: - KakaoAuth SignIn Function
-        func kakaoAuthSignIn() {
-            if AuthApi.hasToken() { // 발급된 토큰이 있는지
-                UserApi.shared.accessTokenInfo { _, error in // 해당 토큰이 유효한지
-                    if let error = error { // 에러가 발생했으면 토큰이 유효하지 않다.
-                        self.openKakaoService()
-                    } else { // 유효한 토큰
-                        self.loadingInfoDidKakaoAuth()
-                    }
-                }
-            } else { // 만료된 토큰
-                self.openKakaoService()
-            }
-        }
-        
-        func openKakaoService() {
-            if UserApi.isKakaoTalkLoginAvailable() { // 카카오톡 앱 이용 가능한지
-                UserApi.shared.loginWithKakaoTalk { oauthToken, error in // 카카오톡 앱으로 로그인
-                    if let error = error { // 로그인 실패 -> 종료
-                        print("Kakao Sign In Error: ", error.localizedDescription)
-                        return
-                    }
-                    
-                    _ = oauthToken // 로그인 성공
-                    self.loadingInfoDidKakaoAuth() // 사용자 정보 불러와서 Firebase Auth 로그인하기
-                }
-            } else { // 카카오톡 앱 이용 불가능한 사람
-                UserApi.shared.loginWithKakaoAccount { oauthToken, error in // 카카오 웹으로 로그인
-                    if let error = error { // 로그인 실패 -> 종료
-                        print("Kakao Sign In Error: ", error.localizedDescription)
-                        return
-                    }
-                    _ = oauthToken // 로그인 성공
-                    self.loadingInfoDidKakaoAuth() // 사용자 정보 불러와서 Firebase Auth 로그인하기
+    func kakaoAuthSignIn() {
+        if AuthApi.hasToken() { // 발급된 토큰이 있는지
+            UserApi.shared.accessTokenInfo { _, error in // 해당 토큰이 유효한지
+                if let error = error { // 에러가 발생했으면 토큰이 유효하지 않다.
+                    self.openKakaoService()
+                } else { // 유효한 토큰
+                    self.loadingInfoDidKakaoAuth()
                 }
             }
+        } else { // 만료된 토큰
+            self.openKakaoService()
         }
-        
-        func loadingInfoDidKakaoAuth() {  // 사용자 정보 불러오기
-            UserApi.shared.me { kakaoUser, error in
-                if let error = error {
-                    print("카카오톡 사용자 정보 불러오는데 실패했습니다.")
-                    
+    }
+    
+    func openKakaoService() {
+        if UserApi.isKakaoTalkLoginAvailable() { // 카카오톡 앱 이용 가능한지
+            UserApi.shared.loginWithKakaoTalk { oauthToken, error in // 카카오톡 앱으로 로그인
+                if let error = error { // 로그인 실패 -> 종료
+                    print("Kakao Sign In Error: ", error.localizedDescription)
                     return
                 }
-                guard let email = kakaoUser?.kakaoAccount?.email else { return }
-                guard let password = kakaoUser?.id else { return }
-                guard let userName = kakaoUser?.kakaoAccount?.profile?.nickname else { return }
                 
-                self.signInWithEmail(email: email, password: String(password))
+                _ = oauthToken // 로그인 성공
+                self.loadingInfoDidKakaoAuth() // 사용자 정보 불러와서 Firebase Auth 로그인하기
+            }
+        } else { // 카카오톡 앱 이용 불가능한 사람
+            UserApi.shared.loginWithKakaoAccount { oauthToken, error in // 카카오 웹으로 로그인
+                if let error = error { // 로그인 실패 -> 종료
+                    print("Kakao Sign In Error: ", error.localizedDescription)
+                    return
+                }
+                _ = oauthToken // 로그인 성공
+                self.loadingInfoDidKakaoAuth() // 사용자 정보 불러와서 Firebase Auth 로그인하기
             }
         }
+    }
+    
+    func loadingInfoDidKakaoAuth() {  // 사용자 정보 불러오기
+        UserApi.shared.me { kakaoUser, error in
+            if let error = error {
+                print("카카오톡 사용자 정보 불러오는데 실패했습니다.")
+                
+                return
+            }
+            guard let email = kakaoUser?.kakaoAccount?.email else { return }
+            guard let password = kakaoUser?.id else { return }
+            guard let userName = kakaoUser?.kakaoAccount?.profile?.nickname else { return }
+            
+            self.signInWithEmail(email: email, password: String(password))
+        }
+    }
     func signInWithEmail(email: String, password: String) {
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
             if let error = error {
@@ -177,7 +190,7 @@ class SignInViewModel: ObservableObject {
 }
 
 struct EmailLoginView: View {
-    @ObservedObject var viewModel: SignInViewModel
+    @ObservedObject var viewModel: signInViewModel
     
     @State private var email = ""
     @State private var password = ""
@@ -231,7 +244,7 @@ struct EmailLoginView: View {
             
             Spacer()
         }
-//        .navigationTitle("Email Login")
+        //        .navigationTitle("Email Login")
         .padding()
     }
     

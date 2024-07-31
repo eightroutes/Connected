@@ -16,7 +16,7 @@ struct mainView: View {
         TabView(selection: $selectedTab){
             ZStack {
                 mainMap()
-                profile()
+                ProfileView()
                     .padding(.bottom, 660)
                     .sheet(isPresented: $showProfileDetail) {
                         profileDetail()

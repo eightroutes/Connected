@@ -1,35 +1,78 @@
 import SwiftUI
 import MapKit
+import CoreLocation
 
 struct mainMap: View {
+    @StateObject private var firestoreManager = FirestoreManager()
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
+    @StateObject private var locationManager = LocationManager()
     
     var body: some View {
         Map(position: $position, interactionModes: .all) {
-            UserAnnotation()
+            ForEach(firestoreManager.usersLoc) { usersLoc in
+                Marker("User: \(usersLoc.name)", coordinate: CLLocationCoordinate2D(latitude: usersLoc.latitude, longitude: usersLoc.longitude))
+            }
         }
         .mapControls {
             MapUserLocationButton()
             MapPitchToggle()
         }
         .onAppear {
-            CLLocationManager().requestWhenInUseAuthorization()
-            setupInitialCamera()
+            locationManager.requestLocation()
+            firestoreManager.fetchUserLocations()
+        }
+        .onChange(of: locationManager.location) { newLocation in
+            if let location = newLocation {
+                updateUserLocationAndFetch(location: location)
+            }
         }
     }
     
-    private func setupInitialCamera() {
-        // 사용자 위치를 기반으로 카메라 설정
-        position = .userLocation(fallback: .camera(MapCamera(
-            centerCoordinate: CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780), // 폴백 좌표
-            distance: 10, // 줌 레벨 조정 (낮은 값일수록 더 줌인됨)
+    private func updateUserLocationAndFetch(location: CLLocation) {
+        firestoreManager.updateUserLocation(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude) { success in
+            if success {
+                print("User location updated successfully")
+                firestoreManager.fetchUserLocations()
+                setupInitialCamera(location: location)
+            } else {
+                print("Failed to update user location")
+            }
+        }
+    }
+    
+    private func setupInitialCamera(location: CLLocation) {
+        position = .camera(MapCamera(
+            centerCoordinate: location.coordinate,
+            distance: 1000,
             heading: 0,
-            pitch: 45 // 3D 효과를 위한 pitch 값 (0-90 사이, 높을수록 더 기울어짐)
-        )))
+            pitch: 60
+        ))
+    }
+}
+
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    private let locationManager = CLLocationManager()
+    @Published var location: CLLocation?
+    
+    override init() {
+        super.init()
+        locationManager.delegate = self
+    }
+    
+    func requestLocation() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        location = locations.last
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Error getting location", error)
     }
 }
 
 #Preview {
     mainMap()
 }
-

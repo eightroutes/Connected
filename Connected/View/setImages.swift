@@ -3,13 +3,16 @@ import FirebaseStorage
 import FirebaseCore
 import FirebaseFirestore
 import FirebaseAuth
+import CropViewController
 
-struct setProfile: View {
+
+struct setImages: View {
     @State private var inputName = ""
     @State private var showNextScreen = false
     @State private var navigationPath = NavigationPath()
     @State private var profileImages: [UIImage?] = Array(repeating: nil, count: 6)
     @State private var showImagePicker = false
+    @State private var showCropView = false
     @State private var currentImageIndex = 0
     
     let db = Firestore.firestore()
@@ -31,7 +34,7 @@ struct setProfile: View {
                     .padding(.top, 40)
                     
                     Spacer()
-                    Text("프로필을 설정해주세요")
+                    Text("사진을 추가하세요")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                     Spacer()
@@ -83,12 +86,10 @@ struct setProfile: View {
                             }
                         }
                     }
-                    
-                    
                     .padding()
                     
-                    
                     Spacer()
+                    
                 }
                 
                 VStack {
@@ -106,15 +107,16 @@ struct setProfile: View {
                     .disabled(!profileImages.contains(where: { $0 != nil }))
                     .background(
                         NavigationLink(destination: mainView(), isActive: $showNextScreen) {
-                             mainView()
+                            mainView()
                         }
-                        .hidden()
+                            .hidden()
                     )
                 }
+                
             }
-            .ignoresSafeArea(.keyboard)
             .sheet(isPresented: $showImagePicker) {
-                ImagePicker(image: $profileImages[currentImageIndex])
+                ImagePickerView(isPresented: $showImagePicker, selectedImage: $profileImages[currentImageIndex], showCropView: $showCropView)
+
             }
         }
         .accentColor(.black)
@@ -130,7 +132,7 @@ struct setProfile: View {
             
             group.enter()
             let imageName = "\(userId)_profile_\(index).jpg"
-            let imageRef = storage.reference().child("profile_images/\(imageName)")
+            let imageRef = storage.reference().child("other_images/\(imageName)")
             
             imageRef.putData(imageData, metadata: nil) { (metadata, error) in
                 if let error = error {
@@ -154,7 +156,7 @@ struct setProfile: View {
     
     func saveProfileUrlsToFirestore(urls: [String]) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
-        db.collection("users").document(userId).setData(["profile_images": urls], merge: true) { error in
+        db.collection("users").document(userId).setData(["other_images": urls], merge: true) { error in
             if let error = error {
                 print("Error saving profile URLs: \(error)")
             } else {
@@ -164,36 +166,88 @@ struct setProfile: View {
     }
 }
 
-struct ImagePicker: UIViewControllerRepresentable {
-    @Binding var image: UIImage?
-    @Environment(\.presentationMode) private var presentationMode
+struct ImagePickerViewS: UIViewControllerRepresentable {
+    @Binding var isPresented: Bool
+    @Binding var selectedImage: UIImage?
+    @Binding var showCropView: Bool
     
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
+    func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.delegate = context.coordinator
-        picker.sourceType = .photoLibrary
-        picker.allowsEditing = true
         return picker
     }
     
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<ImagePicker>) {}
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
     
-    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-        let parent: ImagePicker
+    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        let parent: ImagePickerViewS
         
-        init(_ parent: ImagePicker) {
+        init(_ parent: ImagePickerViewS) {
             self.parent = parent
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let image = info[.originalImage] as? UIImage {
-                parent.image = image
+            if let uiImage = info[.originalImage] as? UIImage {
+                parent.selectedImage = uiImage
+                parent.showCropView = true
             }
-            parent.presentationMode.wrappedValue.dismiss()
+            parent.isPresented = false
+        }
+        
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.isPresented = false
         }
     }
 }
+
+struct CropViewControllerWrapperS: UIViewControllerRepresentable {
+    var image: UIImage
+    @Binding var croppedImage: UIImage?
+    @Binding var isPresented: Bool
+    
+    func makeUIViewController(context: Context) -> CropViewController {
+        let cropViewController = CropViewController(image: image)
+        cropViewController.delegate = context.coordinator
+        cropViewController.aspectRatioPreset = .presetSquare
+        cropViewController.aspectRatioLockEnabled = true
+        cropViewController.resetAspectRatioEnabled = false
+
+        return cropViewController
+    }
+    
+    func updateUIViewController(_ uiViewController: CropViewController, context: Context) {}
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, CropViewControllerDelegate {
+        let parent: CropViewControllerWrapperS
+        
+        init(_ parent: CropViewControllerWrapperS) {
+            self.parent = parent
+        }
+        
+        func cropViewController(_ cropViewController: CropViewController, didCropToCircularImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+            parent.croppedImage = image
+            parent.isPresented = false
+        }
+        
+        func cropViewControllerDidCancel(_ cropViewController: CropViewController) {
+            parent.isPresented = false
+        }
+    }
+}
+
+
+struct setImages_Previews: PreviewProvider {
+    static var previews: some View {
+        setImages()
+    }
+}
+
+

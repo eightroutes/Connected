@@ -21,40 +21,6 @@ struct User: Identifiable {
     let movieGenres: [String]
 }
 
-class FirestoreManager: ObservableObject {
-    @Published var users: [User] = []
-    
-    func fetchUsers(completion: @escaping () -> Void) {
-        let db = Firestore.firestore()
-        db.collection("users").getDocuments { snapshot, error in
-            if let error = error {
-                print("Error fetching users: \(error)")
-                return
-            }
-            
-            guard let documents = snapshot?.documents else {
-                print("No documents found")
-                return
-            }
-            
-            self.users = documents.compactMap { doc -> User? in
-                let data = doc.data()
-                let id = doc.documentID
-                let name = data["name"] as? String ?? ""
-                let profileImage = data["profileImage"] as? String ?? ""
-                let interests = data["interests"] as? [String] ?? []
-                let selectedColor = data["selectedColor"] as? String ?? ""
-                let selectedMBTI = data["selectedMBTI"] as? String ?? ""
-                let musicGenres = data["musicGenres"] as? [String] ?? []
-                let movieGenres = data["movieGenres"] as? [String] ?? []
-                
-                return User(id: id, name: name, profileImage: profileImage, interests: interests, selectedColor: selectedColor, selectedMBTI: selectedMBTI, musicGenres: musicGenres, movieGenres: movieGenres)
-            }
-            
-            completion()
-        }
-    }
-}
 
 struct connectFriends: View {
     @StateObject private var firestoreManager = FirestoreManager()
@@ -76,7 +42,7 @@ struct connectFriends: View {
                     }
             } else {
                 ForEach(similarUsers) { user in
-                    VStack {
+                    HStack {
                         Image(user.profileImage)
                             .resizable()
                             .frame(width: 100, height: 100)
