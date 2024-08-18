@@ -1,6 +1,5 @@
 # CONNECTED
 
-![ConnectedAppIcon](https://github.com/user-attachments/assets/7e1667ca-6ee2-41a9-a761-213a075b5f48 | width=200)
 <img src="https://github.com/user-attachments/assets/7e1667ca-6ee2-41a9-a761-213a075b5f48" alt="ConnectedAppIcon" width="200" height="200"/>
 
 ## 당신의 동네, 당신의 세상
