@@ -28,7 +28,6 @@ struct ProfileImageSetting: View {
                             .foregroundStyle(Color.gray)
                             .opacity(0.2)
                     }
-                    .padding(.top, 40)
                     
                     Text("프로필을 설정해주세요")
                         .font(.largeTitle)
@@ -88,12 +87,8 @@ struct ProfileImageSetting: View {
                             .cornerRadius(30)
                     }
                     .disabled(profileImage == nil)
-                    .background(
-                        NavigationLink(destination: setImages(), isActive: $showNextScreen) {
-                            setImages()
-                        }
-                        .hidden()
-                    )
+                    .background(NavigationLink(destination: setImages(), isActive: $showNextScreen){})
+//                    .hidden()
                 }
             }
             .sheet(isPresented: $showingImagePicker) {

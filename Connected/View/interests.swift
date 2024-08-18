@@ -95,7 +95,7 @@ struct interests: View {
                                 .cornerRadius(30)
                         }
                         .disabled(intr.count < 5)
-                        .background( NavigationLink(destination: ProfileImageSetting(), isActive: $showNextScreen){})
+                        .background(NavigationLink(destination: ProfileImageSetting(), isActive: $showNextScreen){})
                     
                 }
             }

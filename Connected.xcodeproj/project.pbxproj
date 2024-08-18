@@ -23,12 +23,17 @@
 		662B85AF2C02F19B008F14E6 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 662B85AE2C02F19B008F14E6 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		662F28D72C62124400106ADE /* CropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 662F28D62C62124400106ADE /* CropViewController */; };
 		662F28D92C62124400106ADE /* TOCropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 662F28D82C62124400106ADE /* TOCropViewController */; };
+		6657581E2C6741EC003163E2 /* ProfileDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657581D2C6741EC003163E2 /* ProfileDetailViewModel.swift */; };
 		66588E252C37D47100D70BCB /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 66588E242C37D47100D70BCB /* FirebaseStorage */; };
+		666E12D62C7076EE00E894E8 /* UserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666E12D52C7076EE00E894E8 /* UserLocation.swift */; };
+		666E12D82C7076FB00E894E8 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666E12D72C7076FB00E894E8 /* UserProfile.swift */; };
+		6671E8582C6DEC6900A0FB14 /* CustomMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6671E8572C6DEC6900A0FB14 /* CustomMarker.swift */; };
+		6671E85A2C6F4BB900A0FB14 /* sampleUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6671E8592C6F4BB900A0FB14 /* sampleUser.swift */; };
 		667BC57B2C2ED7E70008C302 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 667BC57A2C2ED7E70008C302 /* KakaoSDK */; };
 		667BC57D2C2ED7E70008C302 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 667BC57C2C2ED7E70008C302 /* KakaoSDKAuth */; };
 		66821AEA2C098EB0007E39C1 /* test1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66821AE92C098EB0007E39C1 /* test1.swift */; };
 		669215012BDF8ABD00E6A40A /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669215002BDF8ABD00E6A40A /* test.swift */; };
-		66AA984F2C3BD49200FEAEDE /* profileDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AA984E2C3BD49200FEAEDE /* profileDetail.swift */; };
+		66AA984F2C3BD49200FEAEDE /* ProfileDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AA984E2C3BD49200FEAEDE /* ProfileDetail.swift */; };
 		66B5DF592BCCB82600272115 /* signIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF582BCCB82600272115 /* signIn.swift */; };
 		66B5DF5B2BCCB95900272115 /* name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF5A2BCCB95900272115 /* name.swift */; };
 		66B5DF5D2BCCBA3000272115 /* birthday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B5DF5C2BCCBA3000272115 /* birthday.swift */; };
@@ -54,9 +59,14 @@
 		662830112BC35E180010EFAD /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		662830632BC443040010EFAD /* mainMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainMap.swift; sourceTree = "<group>"; };
 		662830652BC444480010EFAD /* mainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainView.swift; sourceTree = "<group>"; };
+		6657581D2C6741EC003163E2 /* ProfileDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailViewModel.swift; sourceTree = "<group>"; };
+		666E12D52C7076EE00E894E8 /* UserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocation.swift; sourceTree = "<group>"; };
+		666E12D72C7076FB00E894E8 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		6671E8572C6DEC6900A0FB14 /* CustomMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMarker.swift; sourceTree = "<group>"; };
+		6671E8592C6F4BB900A0FB14 /* sampleUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sampleUser.swift; sourceTree = "<group>"; };
 		66821AE92C098EB0007E39C1 /* test1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test1.swift; sourceTree = "<group>"; };
 		669215002BDF8ABD00E6A40A /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = test.swift; path = View/test.swift; sourceTree = "<group>"; };
-		66AA984E2C3BD49200FEAEDE /* profileDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = profileDetail.swift; sourceTree = "<group>"; };
+		66AA984E2C3BD49200FEAEDE /* ProfileDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetail.swift; sourceTree = "<group>"; };
 		66B5DF582BCCB82600272115 /* signIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signIn.swift; sourceTree = "<group>"; };
 		66B5DF5A2BCCB95900272115 /* name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = name.swift; sourceTree = "<group>"; };
 		66B5DF5C2BCCBA3000272115 /* birthday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = birthday.swift; sourceTree = "<group>"; };
@@ -102,6 +112,9 @@
 			isa = PBXGroup;
 			children = (
 				66F5CE012C59D11800B9084F /* oauth.swift */,
+				6671E8592C6F4BB900A0FB14 /* sampleUser.swift */,
+				666E12D52C7076EE00E894E8 /* UserLocation.swift */,
+				666E12D72C7076FB00E894E8 /* UserProfile.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -118,6 +131,8 @@
 			children = (
 				66119A542C5A22F400DE35F4 /* connectFriends.swift */,
 				66D10B052C5B61400051EF2B /* FirestoreManager.swift */,
+				6657581D2C6741EC003163E2 /* ProfileDetailViewModel.swift */,
+				6671E8572C6DEC6900A0FB14 /* CustomMarker.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -180,7 +195,7 @@
 				662830652BC444480010EFAD /* mainView.swift */,
 				662830632BC443040010EFAD /* mainMap.swift */,
 				66B5DF662BCCC45600272115 /* ProfileView.swift */,
-				66AA984E2C3BD49200FEAEDE /* profileDetail.swift */,
+				66AA984E2C3BD49200FEAEDE /* ProfileDetail.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -282,20 +297,25 @@
 			files = (
 				662830022BC35B0B0010EFAD /* ConnectedApp.swift in Sources */,
 				66821AEA2C098EB0007E39C1 /* test1.swift in Sources */,
-				66AA984F2C3BD49200FEAEDE /* profileDetail.swift in Sources */,
+				66AA984F2C3BD49200FEAEDE /* ProfileDetail.swift in Sources */,
 				66B5DF672BCCC45600272115 /* ProfileView.swift in Sources */,
 				66B5DF5F2BCCBA3900272115 /* gender.swift in Sources */,
 				669215012BDF8ABD00E6A40A /* test.swift in Sources */,
 				66119A552C5A22F400DE35F4 /* connectFriends.swift in Sources */,
 				66B5DF652BCCBA7C00272115 /* interests.swift in Sources */,
+				6671E85A2C6F4BB900A0FB14 /* sampleUser.swift in Sources */,
 				66F5CE022C59D11800B9084F /* oauth.swift in Sources */,
+				666E12D62C7076EE00E894E8 /* UserLocation.swift in Sources */,
 				662830642BC443040010EFAD /* mainMap.swift in Sources */,
 				66B5DF592BCCB82600272115 /* signIn.swift in Sources */,
+				6657581E2C6741EC003163E2 /* ProfileDetailViewModel.swift in Sources */,
 				66D10B062C5B61400051EF2B /* FirestoreManager.swift in Sources */,
+				6671E8582C6DEC6900A0FB14 /* CustomMarker.swift in Sources */,
 				66B5DF5B2BCCB95900272115 /* name.swift in Sources */,
 				66B666502C61F69200357B9E /* ProfileImageSetting.swift in Sources */,
 				66B5DF5D2BCCBA3000272115 /* birthday.swift in Sources */,
 				66B5DF632BCCBA6500272115 /* aboutYourself.swift in Sources */,
+				666E12D82C7076FB00E894E8 /* UserProfile.swift in Sources */,
 				662830662BC444480010EFAD /* mainView.swift in Sources */,
 				66B5DF612BCCBA5300272115 /* setImages.swift in Sources */,
 				662830122BC35E180010EFAD /* SplashScreenView.swift in Sources */,
@@ -307,6 +327,7 @@
 /* Begin XCBuildConfiguration section */
 		6628300A2BC35B0C0010EFAD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66D10B022C5A384D0051EF2B /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -358,7 +379,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -371,6 +392,7 @@
 		};
 		6628300B2BC35B0C0010EFAD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66D10B022C5A384D0051EF2B /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -416,7 +438,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -428,6 +450,7 @@
 		};
 		6628300D2BC35B0C0010EFAD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66D10B022C5A384D0051EF2B /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -461,6 +484,7 @@
 		};
 		6628300E2BC35B0C0010EFAD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66D10B022C5A384D0051EF2B /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

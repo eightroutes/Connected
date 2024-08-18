@@ -6,30 +6,30 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct mainView: View {
     @State private var selectedTab = 0
     @State private var showProfileDetail = false
+    @State private var userId: String?
     
     
     var body: some View {
         TabView(selection: $selectedTab){
             ZStack {
                 mainMap()
-                ProfileView()
+                ProfileView(showProfileDetail: $showProfileDetail, userId: $userId)
                     .padding(.bottom, 660)
-                    .sheet(isPresented: $showProfileDetail) {
-                        profileDetail()
-                    }
                     .onAppear{selectedTab = 0}
-                    .tag(0)
+                    .tag(0) 
+            
             }
             .tabItem {
                 Image(systemName: selectedTab == 0 ? "house.fill" : "house")
                     .padding(.top, 10)
                     .environment(\.symbolVariants, selectedTab == 0 ?.fill: .none)
             }
-                        
+            
             Text("Feed")
                 .tabItem {
                     Image(systemName: selectedTab == 1 ? "magnifyingglass" : "magnifyingglass")
@@ -66,7 +66,16 @@ struct mainView: View {
         .shadow(radius: 10)
         .ignoresSafeArea()
         .navigationBarBackButtonHidden(true)
-        .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $showProfileDetail) {
+            if let userId = userId {
+                ProfileDetail(userId: userId)
+            }
+        }
+        .onAppear {
+            if let user = Auth.auth().currentUser {
+                userId = user.uid
+            }
+        }
         
     }
 }
@@ -84,7 +93,7 @@ struct message: View {
         Text("messages")
         
         
-
+        
     }
     
 }

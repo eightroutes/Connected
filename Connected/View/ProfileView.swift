@@ -6,8 +6,9 @@ import FirebaseCore
 
 struct ProfileView: View {
     @StateObject private var firestoreManager = FirestoreManager()
-    @State private var showProfileDetail = false
-    @State private var userId: String?
+//    @State private var showProfileDetail = false
+    @Binding var showProfileDetail: Bool
+    @Binding var userId: String?
 
     var body: some View {
         ZStack {
@@ -32,13 +33,16 @@ struct ProfileView: View {
                                 .overlay {
                                     Circle().stroke(.white, lineWidth: 2)
                                 }
-                                .shadow(radius: 2)
+                                .shadow(radius: 1)
                                 .frame(width: 60, height: 60)
+                                .foregroundColor(.gray)
                         }
                     }
                     .zIndex(1.0)
                     .sheet(isPresented: $showProfileDetail) {
-                        profileDetail()
+                        if let userId = userId {
+                            ProfileDetail(userId: userId)
+                        }
                     }
                     
                     VStack(alignment: .leading, spacing: 1) {
@@ -50,6 +54,7 @@ struct ProfileView: View {
                                 .font(.headline)
                                 .padding(.leading, 20.0)
                                 .foregroundStyle(.white)
+                                .truncationMode(.tail)
                         }
                         ZStack {
                             RoundedRectangle(cornerRadius: 8)
@@ -70,21 +75,31 @@ struct ProfileView: View {
                     Spacer()
                 }
                 .padding(.leading)
-            } else {
-                Text("Loading...")
             }
+//            else {
+//                Text("Loading...")
+//            }
         }
         .onAppear {
-            if let user = Auth.auth().currentUser {
-                userId = user.uid
-                firestoreManager.fetchUserProfile(userId: userId!)
-            } else {
-                print("User is not logged in.")
+            if let userId = userId {
+                firestoreManager.fetchUserProfile(userId: userId)
             }
         }
+        //        .onAppear {
+        //            if let user = Auth.auth().currentUser {
+        //                userId = user.uid
+        //                firestoreManager.fetchUserProfile(userId: userId!)
+        //            } else {
+        //                print("User is not logged in.")
+        //            }
+        //        }
     }
 }
 
 #Preview {
-    ProfileView()
+    @State var showProfileDetail = false
+    @State var userId: String? = "sampleUserId"
+    
+    return ProfileView(showProfileDetail: $showProfileDetail, userId: $userId)
+        .environmentObject(FirestoreManager()) // FirestoreManager가 @EnvironmentObject로 사용되는 경우
 }

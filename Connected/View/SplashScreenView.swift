@@ -21,12 +21,12 @@ struct SplashScreenView: View {
     var body: some View {
         
         if isActive {
-//            if viewModel.isSignedIn {
-//                mainView()
-//            } else {
-//                signIn()
-//            }
-             signIn()
+            if viewModel.isSignedIn {
+                mainView()
+            } else {
+                signIn()
+            }
+//             mainView()
         } else{
             VStack{
                 VStack{

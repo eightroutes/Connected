@@ -31,7 +31,6 @@ struct setImages: View {
                             .foregroundStyle(Color.gray)
                             .opacity(0.2)
                     }
-                    .padding(.top, 40)
                     
                     Spacer()
                     Text("사진을 추가하세요")
@@ -105,12 +104,8 @@ struct setImages: View {
                             .cornerRadius(30)
                     }
                     .disabled(!profileImages.contains(where: { $0 != nil }))
-                    .background(
-                        NavigationLink(destination: mainView(), isActive: $showNextScreen) {
-                            mainView()
-                        }
-                            .hidden()
-                    )
+                    .background(NavigationLink(destination: mainView(), isActive: $showNextScreen){})
+//                    .hidden()
                 }
                 
             }

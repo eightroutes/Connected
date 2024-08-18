@@ -7,55 +7,77 @@ class FirestoreManager: ObservableObject {
     @Published var usersLoc: [UserLocation] = []
     @Published var userProfile: UserProfile?
     @Published var users: [User] = []
+    @Published var profileImage: UIImage?
+    
     
     private var storage = Storage.storage()
     private var db = Firestore.firestore()
     private var listenerRegistration: ListenerRegistration?
+    
+    var currentUserId: String?
+
     
     init() {
         
     }
     
     // MARK: -- Mark Users Locations
-    func updateUserLocation(latitude: Double, longitude: Double, completion: @escaping (Bool) -> Void) {
-        guard let userId = Auth.auth().currentUser?.uid else {
-            print("No user logged in")
-            completion(false)
-            return
-        }
-        
-        let userRef = db.collection("users").document(userId)
-        userRef.updateData([
+    func updateUserLocation(userId: String, latitude: Double, longitude: Double, completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+        db.collection("users").document(userId).updateData([
             "latitude": latitude,
             "longitude": longitude
         ]) { error in
             if let error = error {
-                print("Error updating user location: \(error.localizedDescription)")
+                print("Error updating user location: \(error)")
                 completion(false)
             } else {
-                print("User location successfully updated")
                 completion(true)
             }
         }
     }
     func fetchUserLocations() {
-        listenerRegistration = db.collection("users").addSnapshotListener { snapshot, error in
-            if let error = error {
-                print("Error fetching user locations: \(error.localizedDescription)")
+        db.collection("users").addSnapshotListener { (querySnapshot, error) in
+            guard let documents = querySnapshot?.documents else {
+                print("No documents")
                 return
             }
             
-            self.usersLoc = snapshot?.documents.compactMap { document in
+            self.usersLoc = documents.compactMap { document -> UserLocation? in
                 let data = document.data()
-                guard let name = data["name"] as? String,
+                guard let name = data["Name"] as? String,
                       let latitude = data["latitude"] as? Double,
                       let longitude = data["longitude"] as? Double else {
                     return nil
                 }
-                return UserLocation(id: document.documentID, name: name, latitude: latitude, longitude: longitude)
-            } ?? []
+                
+                let profileImageURL = data["profile_image"] as? String
+                
+                let user = UserLocation(id: document.documentID,
+                                        name: name,
+                                        latitude: latitude,
+                                        longitude: longitude,
+                                        profileImageURL: profileImageURL ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png")
+                
+                if let url = profileImageURL {
+                    self.downloadImage(for: user, from: url)
+                }
+                
+                return user
+            }
         }
     }
+    
+    func downloadImage(for user: UserLocation, from url: String) {
+        guard let index = self.usersLoc.firstIndex(where: { $0.id == user.id }) else { return }
+        
+        self.downloadImage(from: url) { image in
+            DispatchQueue.main.async {
+                self.usersLoc[index].profileImage = image
+            }
+        }
+    }
+    
     
     deinit {
         listenerRegistration?.remove()
@@ -88,7 +110,7 @@ class FirestoreManager: ObservableObject {
     
     private func downloadImage(from url: String, completion: @escaping (UIImage?) -> Void) {
         let storageRef = storage.reference(forURL: url)
-        storageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+        storageRef.getData(maxSize: 10 * 1024 * 1024) { data, error in
             if let error = error {
                 print("Error downloading image: \(error)")
                 completion(nil)
@@ -121,13 +143,13 @@ class FirestoreManager: ObservableObject {
             self.users = documents.compactMap { doc -> User? in
                 let data = doc.data()
                 let id = doc.documentID
-                let name = data["name"] as? String ?? ""
-                let profileImage = data["profileImage"] as? String ?? ""
-                let interests = data["interests"] as? [String] ?? []
-                let selectedColor = data["selectedColor"] as? String ?? ""
-                let selectedMBTI = data["selectedMBTI"] as? String ?? ""
-                let musicGenres = data["musicGenres"] as? [String] ?? []
-                let movieGenres = data["movieGenres"] as? [String] ?? []
+                let name = data["Name"] as? String ?? ""
+                let profileImage = data["profile_image"] as? String ?? ""
+                let interests = data["Interests"] as? [String] ?? []
+                let selectedColor = data["Color"] as? String ?? ""
+                let selectedMBTI = data["MBTI"] as? String ?? ""
+                let musicGenres = data["Music"] as? [String] ?? []
+                let movieGenres = data["Movie"] as? [String] ?? []
                 
                 return User(id: id, name: name, profileImage: profileImage, interests: interests, selectedColor: selectedColor, selectedMBTI: selectedMBTI, musicGenres: musicGenres, movieGenres: movieGenres)
             }
@@ -136,18 +158,36 @@ class FirestoreManager: ObservableObject {
         }
     }
     
+    func fetchCurrentUser(completion: @escaping (User?) -> Void) {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            completion(nil)
+            return
+        }
+        
+        db.collection("users").document(userId).getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                // User 객체 생성 로직
+                let user = User(
+                    id: userId,
+                    name: data?["Name"] as? String ?? "",
+                    profileImage: data?["profile_image"] as? String ?? "",
+                    interests: data?["Interests"] as? [String] ?? [],
+                    selectedColor: data?["Color"] as? String ?? "",
+                    selectedMBTI: data?["MBTI"] as? String ?? "",
+                    musicGenres: data?["Music"] as? [String] ?? [],
+                    movieGenres: data?["Movie"] as? [String] ?? []
+                )
+                completion(user)
+            } else {
+                print("Current user document does not exist")
+                completion(nil)
+            }
+        }
+    }
+    
 }
 
-struct UserLocation: Identifiable {
-    var id: String
-    var name: String
-    var latitude: Double
-    var longitude: Double
-}
 
 
-struct UserProfile {
-    var name: String
-    var creditAmount: String
-    var profileImage: UIImage?
-}
+
