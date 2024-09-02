@@ -15,7 +15,7 @@ struct mainMap: View {
         Map(position: $cameraPosition, interactionModes: .all) {
             UserAnnotation()
             ForEach(firestoreManager.usersLoc.filter { $0.id != firestoreManager.currentUserId }) { user in
-//                Annotation("\(user.name)", coordinate: CLLocationCoordinate2D(latitude: user.latitude, longitude: user.longitude)) {
+                //                Annotation("\(user.name)", coordinate: CLLocationCoordinate2D(latitude: user.latitude, longitude: user.longitude)) {
                 Annotation("", coordinate: CLLocationCoordinate2D(latitude: user.latitude, longitude: user.longitude)) {
                     CustomMarker(user: user) {
                         selectedUser = user
@@ -28,11 +28,17 @@ struct mainMap: View {
             MapUserLocationButton()
             MapPitchToggle()
         }
-        .sheet(isPresented: $showProfileDetail) {
+        .navigationDestination(isPresented: $showProfileDetail) {
             if let selectedUser = selectedUser {
                 ProfileDetail(userId: selectedUser.id)
+                    .accentColor(.brand)
             }
         }
+//        .sheet(isPresented: $showProfileDetail) {
+//            if let selectedUser = selectedUser {
+//                ProfileDetail(userId: selectedUser.id)
+//            }
+//        }
         .onAppear {
             if let userId = Auth.auth().currentUser?.uid {
                 firestoreManager.currentUserId = userId

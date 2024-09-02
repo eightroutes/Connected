@@ -6,103 +6,119 @@ import FirebaseAuth
 struct ProfileDetail: View {
     @StateObject private var viewModel = ProfileDetailViewModel()
     @State private var selectedImageIndex = 0
+    
+//    @Environment(\.presentationMode) var presentationMode
+//    @EnvironmentObject var navigationState: NavigationState
+    @State private var navigationPath = NavigationPath()
+
+    
     let userId: String
 
     
     var body: some View {
-        VStack {
-            // Swipeable Image Gallery
-            TabView(selection: $selectedImageIndex) {
-                ForEach(viewModel.userImages.indices, id: \.self) { index in
-                    if let image = viewModel.userImages[index] {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(height: 500)
-                            .clipped()
-                            .tag(index)
-                    } else {
-                        Rectangle()
-                            .fill(Color.brand)
-                            .overlay(
-                                Image(systemName: "rays")
+        NavigationStack(path: $navigationPath){
+            ZStack{
+                VStack {
+                    // Swipeable Image Gallery
+                    TabView(selection: $selectedImageIndex) {
+                        ForEach(viewModel.userImages.indices, id: \.self) { index in
+                            if let image = viewModel.userImages[index] {
+                                Image(uiImage: image)
                                     .resizable()
-                                    .frame(width: 50, height: 50)
-                                    .symbolEffect(.variableColor.iterative.hideInactiveLayers.nonReversing)
-                                    .foregroundColor(.white)
-                            )
-                            .tag(index)
+                                    .scaledToFill()
+                                    .frame(height: 500)
+                                    .clipped()
+                                    .tag(index)
+                            } else {
+                                Rectangle()
+                                    .fill(Color.brand)
+                                    .overlay(
+                                        Image(systemName: "rays")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .symbolEffect(.variableColor.iterative.hideInactiveLayers.nonReversing)
+                                            .foregroundColor(.white)
+                                    )
+                                    .tag(index)
+                            }
+                        }
+                    }
+                    .tabViewStyle(PageTabViewStyle())
+                    .frame(height: 500)
+                    
+                    
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 20) {
+                            
+                            // Profile Photo and Name
+                            HStack(spacing: 20) {
+                                if let profileImage = viewModel.profileImage {
+                                    Image(uiImage: profileImage)
+                                        .resizable()
+                                        .clipShape(Circle())
+                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                        .shadow(radius: 1)
+                                        .frame(width: 50, height: 50)
+                                } else {
+                                    Image(systemName: "person.circle.fill")
+                                        .resizable()
+                                        .clipShape(Circle())
+                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                        .shadow(radius: 1)
+                                        .frame(width: 50, height: 50)
+                                        .foregroundColor(.gray)
+                                }
+                                
+                                
+                                Text(viewModel.userName)
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                
+                                if let userAge = viewModel.userAge {
+                                    Text("\(userAge)")
+                                        .font(.title)
+                                }
+                                
+                                
+                                if viewModel.userGender == "male" {
+                                    Text("남")
+                                        .foregroundColor(.blue)
+                                        .font(.title)
+                                } else {
+                                    Text("여")
+                                        .foregroundColor(.pink)
+                                        .font(.title)
+                                }
+                            }
+                            .padding(.bottom, 10)
+                            
+                            // User's Details and Preferences
+                            if !viewModel.userMBTI.isEmpty {
+                                tagView(title: "MBTI", items: [viewModel.userMBTI])
+                            }
+                            
+                            tagView(title: "Music", items: viewModel.userMusic)
+                            tagView(title: "Movie", items: viewModel.userMovie)
+                            tagView(title: "Interests", items: viewModel.userInterests)
+                        }
+                        .padding(25)
                     }
                 }
-            }
-            .tabViewStyle(PageTabViewStyle())
-            .frame(height: 500)
-            ScrollView {
+                .onAppear {
+                    viewModel.fetchUserProfile(for: userId) // 전달받은 UID로 프로필 데이터 불러오기
+                }
+//                .ignoresSafeArea()
                 
-                VStack(alignment: .leading, spacing: 20) {
-                    
-                    // Profile Photo and Name
-                    HStack(spacing: 20) {
-                        if let profileImage = viewModel.profileImage {
-                            Image(uiImage: profileImage)
-                                .resizable()
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                .shadow(radius: 4)
-                                .frame(width: 50, height: 50)
-                        } else {
-                            Image(systemName: "person.circle.fill")
-                                .resizable()
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                .shadow(radius: 4)
-                                .frame(width: 50, height: 50)
-                                .foregroundColor(.gray)
-                        }
-                        
-                        
-                        Text(viewModel.userName)
-                            .font(.title)
-                            .fontWeight(.bold)
-                        
-                        if let userAge = viewModel.userAge {
-                            Text("\(userAge)")
-                                .font(.title)
-                        }
-                        
-                        
-                        if viewModel.userGender == "male" {
-                            Text("남")
-                                .foregroundColor(.blue)
-                                .font(.title)
-                        } else {
-                            Text("여")
-                                .foregroundColor(.pink)
-                                .font(.title)
-                        }
-                    }
-                    .padding(.bottom, 10)
-                    
-                    // User's Details and Preferences
-                    if !viewModel.userMBTI.isEmpty {
-                        tagView(title: "MBTI", items: [viewModel.userMBTI])
-                    }
-                    
-                    tagView(title: "Music", items: viewModel.userMusic)
-                    tagView(title: "Movie", items: viewModel.userMovie)
-                    tagView(title: "Interests", items: viewModel.userInterests)
-                }
-                .padding(25)
             }
         }
-        .onAppear {
-            viewModel.fetchUserProfile(for: userId) // 전달받은 UID로 프로필 데이터 불러오기
-        }
-        .ignoresSafeArea()
+        .tint(.brand)
     }
     
     func tagView(title: String, items: [String]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
+            Text(title)
+               .font(.headline)
+               .fontWeight(.bold)
             FlexibleView(data: items) { item in
                 if title == "MBTI" {
                     Text(item.uppercased())
@@ -131,10 +147,18 @@ struct ProfileDetail: View {
         }
     }
 }
-
+    
 
 #Preview {
-    ProfileDetail(userId: UserLocation.sampleUser.id)}
+    ProfileDetail(userId: UserLocation.sampleUser.id)
+}
+
+
+
+
+
+
+
 
 struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: Hashable {
     let data: Data

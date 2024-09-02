@@ -14,25 +14,25 @@ struct SplashScreenView: View {
     @State private var size = 0.8
     @State private var opacity = 0.1
 
-    @EnvironmentObject var viewModel: signInViewModel
-    
+    @StateObject private var viewModel = ProfileDetailViewModel()
+
     
     
     var body: some View {
         
         if isActive {
-            if viewModel.isSignedIn {
+            if viewModel.isSignedIn &&  viewModel.userImages.count >= 1 {
                 mainView()
             } else {
                 signIn()
             }
-//             mainView()
+//            signIn()
+            
         } else{
             VStack{
                 VStack{
                     Image("SplashLogo")
-//                        .font(Font.custom("Baskerville-Bold", size: 26))
-//                        .foregroundStyle(.black.opacity(0.10))
+
                 }
                 .scaleEffect(size)
 //                .onAppear{
@@ -44,7 +44,7 @@ struct SplashScreenView: View {
             }
             .tint(.black)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     withAnimation {
                         self.isActive = true
                     }
@@ -56,5 +56,4 @@ struct SplashScreenView: View {
 
 #Preview {
     SplashScreenView()
-        .environmentObject(signInViewModel()) // 미리보기에서 viewModel을 설정합니다.
 }

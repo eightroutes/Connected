@@ -22,7 +22,7 @@ struct aboutYourself: View {
     let db = Firestore.firestore()
     
     var body: some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationStack(path: $navigationPath){
             VStack {
                 ZStack {
                     Rectangle()
@@ -41,6 +41,8 @@ struct aboutYourself: View {
                 }
                 .padding(.vertical, 70.0)
             }
+            
+            
             Rectangle()
                 .frame(width:UIScreen.main.bounds.width, height: 1)
                 .foregroundStyle(Color.gray)
@@ -66,7 +68,7 @@ struct aboutYourself: View {
                             HStack{
                                 colorButton(color: "blue", colorStr: "파란색", colorCode: .blue, selectedColor: $selectedColor)
                                 colorButton(color: "purple", colorStr: "보라색", colorCode: .purple, selectedColor: $selectedColor)
-                                colorButton(color: "white", colorStr: "하얀색", colorCode: Color(red: 0.80, green: 0.80, blue: 0.80), selectedColor: $selectedColor)
+                                colorButton(color: "white", colorStr: "하얀색", colorCode: .white, selectedColor: $selectedColor)
                                 colorButton(color: "gray", colorStr: "회색", colorCode: .gray, selectedColor: $selectedColor)
                                 
                             }
@@ -218,23 +220,7 @@ struct aboutYourself: View {
                         }
                         
                     }
-                    //                    Task {
-                    //                        do {
-                    //                            let ref = try await db.collection("users").addDocument(data: [
-                    //                                "Color": selectedColor!,
-                    //                                "MBTI": selectedMBTI!,
-                    //                                "Music": musicGenres,
-                    //                                "Movie": movieGenres
-                    //                            ])
-                    //                            print("Document added with ID: \(ref.documentID)")
-                    //                        } catch {
-                    //                            print("Error adding document: \(error)")
-                    //                        }
-                    //                        print(selectedColor!)
-                    //                        print(selectedMBTI!)
-                    //                        print(musicGenres)
-                    //                        print(movieGenres)
-                    //                        showNextScreen = true
+                    
                 }) {
                     Text("다음")
                         .frame(width: 250)
@@ -248,9 +234,11 @@ struct aboutYourself: View {
                     NavigationLink(destination: interests(), isActive: $showNextScreen) {
                     }
                 )
+                
             }
+            .tint(.black)
+//            .background(Color.brandBack)
         }
-        .tint(.black)
         
     }
 }

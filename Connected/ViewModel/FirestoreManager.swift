@@ -2,6 +2,7 @@ import FirebaseFirestore
 import FirebaseStorage
 import FirebaseAuth
 import Combine
+import UIKit
 
 class FirestoreManager: ObservableObject {
     @Published var usersLoc: [UserLocation] = []
@@ -9,21 +10,18 @@ class FirestoreManager: ObservableObject {
     @Published var users: [User] = []
     @Published var profileImage: UIImage?
     
-    
     private var storage = Storage.storage()
     private var db = Firestore.firestore()
     private var listenerRegistration: ListenerRegistration?
     
     var currentUserId: String?
 
-    
     init() {
-        
+        // 필요한 초기화 작업
     }
     
     // MARK: -- Mark Users Locations
     func updateUserLocation(userId: String, latitude: Double, longitude: Double, completion: @escaping (Bool) -> Void) {
-        let db = Firestore.firestore()
         db.collection("users").document(userId).updateData([
             "latitude": latitude,
             "longitude": longitude
@@ -36,6 +34,7 @@ class FirestoreManager: ObservableObject {
             }
         }
     }
+    
     func fetchUserLocations() {
         db.collection("users").addSnapshotListener { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
@@ -78,7 +77,7 @@ class FirestoreManager: ObservableObject {
         }
     }
     
-    
+    // deinit 메서드를 통해 Firestore의 리스너를 제거합니다.
     deinit {
         listenerRegistration?.remove()
     }
@@ -91,6 +90,7 @@ class FirestoreManager: ObservableObject {
                 let data = document.data()
                 let name = data?["Name"] as? String ?? "Unknown"
                 let creditAmount = data?["creditAmount"] as? String ?? "0"
+                
                 if let profileImageUrl = data?["profile_image"] as? String {
                     self.downloadImage(from: profileImageUrl) { image in
                         DispatchQueue.main.async {
@@ -125,10 +125,35 @@ class FirestoreManager: ObservableObject {
         }
     }
     
-    
+    // MARK: - Image Upload
+    func uploadImage(_ image: UIImage, to path: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        if let imageData = image.jpegData(compressionQuality: 0.7) {
+            let storageRef = storage.reference().child(path)
+            
+            storageRef.putData(imageData, metadata: nil) { metadata, error in
+                if let error = error {
+                    print("Error uploading image: \(error)")
+                    completion(.failure(error))
+                } else {
+                    storageRef.downloadURL { url, error in
+                        if let error = error {
+                            print("Error getting download URL: \(error)")
+                            completion(.failure(error))
+                        } else if let url = url {
+                            print("Image uploaded successfully, download URL: \(url)")
+                            completion(.success(url))
+                        }
+                    }
+                }
+            }
+        } else {
+            print("Failed to compress image.")
+            completion(.failure(NSError(domain: "ImageCompressionError", code: 1, userInfo: nil)))
+        }
+    }
+
     // MARK: -- User Info
     func fetchUsers(completion: @escaping () -> Void) {
-        let db = Firestore.firestore()
         db.collection("users").getDocuments { snapshot, error in
             if let error = error {
                 print("Error fetching users: \(error)")
@@ -167,7 +192,6 @@ class FirestoreManager: ObservableObject {
         db.collection("users").document(userId).getDocument { (document, error) in
             if let document = document, document.exists {
                 let data = document.data()
-                // User 객체 생성 로직
                 let user = User(
                     id: userId,
                     name: data?["Name"] as? String ?? "",
@@ -185,9 +209,4 @@ class FirestoreManager: ObservableObject {
             }
         }
     }
-    
 }
-
-
-
-

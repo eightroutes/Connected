@@ -12,6 +12,7 @@ struct name: View {
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
+            
             ZStack {
                 VStack {
                     ZStack {
@@ -23,7 +24,7 @@ struct name: View {
                             .foregroundStyle(Color.gray)
                             .opacity(0.2)
                     }
-                    .padding(.top, 40)
+//                    .padding(.top, 40)
                     
                     Spacer()
                     Text("이름이 무엇인가요?")
@@ -72,16 +73,14 @@ struct name: View {
                     .disabled(inputName.isEmpty)
                     .background(
                         NavigationLink(destination: birthday(), isActive: $showNextScreen) {
-                            EmptyView()
-                        }
-                        .hidden()
-                    )
+                        })
                 }
             }
+            .accentColor(.black)
             .ignoresSafeArea(.keyboard)
+
+//            .navigationBarBackButtonHidden(true)
         }
-        .accentColor(.black)
-//        .navigationBarBackButtonHidden(true)
     }
 }
 

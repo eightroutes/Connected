@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Connected
-//
-//  Created by 정근호 on 4/9/24.
-//
-
 import SwiftUI
 import FirebaseAuth
 
@@ -13,16 +6,15 @@ struct mainView: View {
     @State private var showProfileDetail = false
     @State private var userId: String?
     
-    
     var body: some View {
         TabView(selection: $selectedTab){
             ZStack {
                 mainMap()
-                ProfileView(showProfileDetail: $showProfileDetail, userId: $userId)
-                    .padding(.bottom, 660)
+                ProfileView(userId: $userId)
+                    .padding(.bottom, 650)
                     .onAppear{selectedTab = 0}
-                    .tag(0) 
-            
+                    .tag(0)
+                
             }
             .tabItem {
                 Image(systemName: selectedTab == 0 ? "house.fill" : "house")
@@ -33,75 +25,53 @@ struct mainView: View {
             Text("Feed")
                 .tabItem {
                     Image(systemName: selectedTab == 1 ? "magnifyingglass" : "magnifyingglass")
-                        .environment(\.symbolVariants, selectedTab == 1 ?.fill: .none)
+                        .environment(\.symbolVariants, selectedTab == 1 ? .fill : .none)
                 }
-                .onAppear{selectedTab = 1}
+                .onAppear { selectedTab = 1 }
                 .tag(1)
-            connectFriends()
+            
+            connectFriends(userId: $userId)
                 .tabItem {
                     Image(selectedTab == 4 ? "center" : "centerGray")
-                        .environment(\.symbolVariants, selectedTab == 4 ?.fill: .none)
+                        .environment(\.symbolVariants, selectedTab == 4 ? .fill : .none)
                 }
-                .onAppear{selectedTab = 4}
+                .onAppear { selectedTab = 4 }
                 .tag(4)
             
             message()
                 .tabItem {
                     Image(systemName: selectedTab == 2 ? "message.fill" : "message")
-                        .environment(\.symbolVariants, selectedTab == 2 ?.fill: .none)
+                        .environment(\.symbolVariants, selectedTab == 2 ? .fill : .none)
                 }
-                .onAppear{selectedTab = 2}
+                .onAppear { selectedTab = 2 }
                 .tag(2)
-            Text("Profile and Settings")
+            
+            SettingsAndInfo()
+            //                Text("Profile and Settings")
                 .tabItem {
-                    
                     Image(systemName: selectedTab == 3 ? "person.fill" : "person")
-                        .environment(\.symbolVariants, selectedTab == 3 ?.fill: .none)
+                        .environment(\.symbolVariants, selectedTab == 3 ? .fill : .none)
                 }
-                .onAppear{selectedTab = 3}
+                .onAppear { selectedTab = 3 }
                 .tag(3)
         }
-        .padding(.bottom, -10)
         .tint(.black)
-        .shadow(radius: 10)
         .ignoresSafeArea()
         .navigationBarBackButtonHidden(true)
-        .sheet(isPresented: $showProfileDetail) {
-            if let userId = userId {
-                ProfileDetail(userId: userId)
-            }
-        }
         .onAppear {
             if let user = Auth.auth().currentUser {
                 userId = user.uid
             }
         }
-        
     }
 }
 
+struct message: View {
+    var body: some View {
+        Text("messages")
+    }
+}
 
 #Preview {
     mainView()
 }
-
-
-
-struct message: View {
-    
-    var body: some View {
-        Text("messages")
-        
-        
-        
-    }
-    
-}
-
-
-
-
-
-
-
-

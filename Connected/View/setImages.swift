@@ -19,7 +19,7 @@ struct setImages: View {
     let storage = Storage.storage()
     
     var body: some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationStack(path: $navigationPath){
             ZStack {
                 VStack {
                     ZStack {
@@ -105,16 +105,17 @@ struct setImages: View {
                     }
                     .disabled(!profileImages.contains(where: { $0 != nil }))
                     .background(NavigationLink(destination: mainView(), isActive: $showNextScreen){})
-//                    .hidden()
+                    //                    .hidden()
                 }
                 
             }
             .sheet(isPresented: $showImagePicker) {
                 ImagePickerView(isPresented: $showImagePicker, selectedImage: $profileImages[currentImageIndex], showCropView: $showCropView)
-
+                
             }
+            
+            .accentColor(.black)
         }
-        .accentColor(.black)
     }
     
     func uploadImages() {

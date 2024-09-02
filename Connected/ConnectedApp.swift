@@ -1,6 +1,7 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseAuth
 import IQKeyboardManagerSwift
 import GoogleSignIn
 import KakaoSDKAuth
@@ -15,12 +16,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         print(db)
         
         
-        let kakaoAppKey = Bundle.main.infoDictionary?["KAKAO_NATIVE_APP_KEY"] ?? ""
-        KakaoSDK.initSDK(appKey: kakaoAppKey as! String)
+        if let kakaoAppKey = Bundle.main.infoDictionary?["KAKAO_NATIVE_APP_KEY"] as? String {
+            KakaoSDK.initSDK(appKey: kakaoAppKey)
+        } else {
+            print("Kakao App Key not found")
+        }
+        
         
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.resignOnTouchOutside = true
+        IQKeyboardManager.shared.layoutIfNeededOnUpdate = true
         
         return true
     }
@@ -61,14 +67,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 @main
 struct ConnectedApp: App {
     @StateObject private var viewModel = signInViewModel()
-    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
-                .environmentObject(viewModel) // ViewModel을 환경 객체로 설정
+                .environmentObject(viewModel) // environmentObject로 viewModel을 전달
         }
     }
+    
+    
 }

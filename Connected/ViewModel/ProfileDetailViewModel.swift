@@ -4,6 +4,8 @@ import FirebaseAuth
 
 class ProfileDetailViewModel: ObservableObject {
     private var imageCounts = 6
+    @Published var isSignedIn = false
+    
     @Published var userImages: [UIImage?] = []
     @Published var profileImage: UIImage?
     @Published var userName: String = "이름"
@@ -22,10 +24,22 @@ class ProfileDetailViewModel: ObservableObject {
     
     init() {
         self.userImages = Array(repeating: nil, count: imageCounts)
+        
+        func checkUserStatus() {
+            if let userId = Auth.auth().currentUser?.uid {
+                isSignedIn = true
+                fetchUserProfile(for: userId)
+            } else {
+                isSignedIn = false
+                userImages = []
+            }
+        }
     }
     
+    
+    
     func fetchUserProfile(for userId: String) {
-//        guard let userId = Auth.auth().currentUser?.uid else { return }
+        //        guard let userId = Auth.auth().currentUser?.uid else { return }
         
         let docRef = db.collection("users").document(userId)
         docRef.getDocument { [weak self] (document, error) in

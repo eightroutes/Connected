@@ -13,7 +13,7 @@ struct birthday: View {
     
     
     var body: some View {
-        NavigationStack{
+        NavigationStack(path: $navigationPath){
             ZStack {
                 VStack {
                     ZStack {
@@ -82,11 +82,13 @@ struct birthday: View {
                                 .cornerRadius(30)
                         }
                     }
+                    
                 }
+                
             }
+            .accentColor(.black)
             
         }
-        .accentColor(.black)
     }
 }
 

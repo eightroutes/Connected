@@ -12,7 +12,7 @@ struct interests: View {
     let db = Firestore.firestore()
     
     var body: some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationStack(path: $navigationPath){
             VStack {
                 ZStack {
                     Rectangle()
@@ -98,22 +98,30 @@ struct interests: View {
                         .background(NavigationLink(destination: ProfileImageSetting(), isActive: $showNextScreen){})
                     
                 }
+                
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+            .accentColor(.black)
+//            .background(Color.brandBack)
+        }
+    }
+        
+        @ViewBuilder
+        private func interestRow(_ interestsArray: [String]) -> some View {
+            HStack(spacing: 10) {
+                ForEach(interestsArray, id: \.self) { interest in
+                    intrButton(intrStr: interest, interests: $intr)
+                }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+
     }
     
-    @ViewBuilder
-    private func interestRow(_ interestsArray: [String]) -> some View {
-        HStack(spacing: 10) {
-            ForEach(interestsArray, id: \.self) { interest in
-                intrButton(intrStr: interest, interests: $intr)
-            }
-            
-        }
-        
-    }
-}
+
+
+
+
+
 
 #Preview {
     interests()

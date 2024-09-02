@@ -25,7 +25,7 @@ struct gender: View {
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath){
             ZStack {
                 VStack {
                     ZStack {
@@ -79,7 +79,7 @@ struct gender: View {
                             showNextScreen = true
                         }
                         Task {
-                           
+                            
                             do {
                                 // 현재 로그인한 사용자의 UID 가져오기
                                 guard let userId = Auth.auth().currentUser?.uid else {
@@ -111,11 +111,14 @@ struct gender: View {
                     .disabled(selectedGender == nil)
                     .background(NavigationLink(destination: aboutYourself(), isActive: $showNextScreen) {})
                     
+                    
+                    
                 }
-                
             }
+            .accentColor(.black)
+            
         }
-        .accentColor(.black)
+        
     }
 }
 

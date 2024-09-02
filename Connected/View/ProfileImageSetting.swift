@@ -16,7 +16,7 @@ struct ProfileImageSetting: View {
     let storage = Storage.storage()
     
     var body: some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationStack(path: $navigationPath){
             ZStack {
                 VStack {
                     ZStack {
@@ -88,7 +88,7 @@ struct ProfileImageSetting: View {
                     }
                     .disabled(profileImage == nil)
                     .background(NavigationLink(destination: setImages(), isActive: $showNextScreen){})
-//                    .hidden()
+                    //                    .hidden()
                 }
             }
             .sheet(isPresented: $showingImagePicker) {
@@ -100,8 +100,12 @@ struct ProfileImageSetting: View {
                 }
             }
             .accentColor(.black)
+            
+            
+            
         }
     }
+    
     
     func uploadImages() {
         guard let userId = Auth.auth().currentUser?.uid else { return }
@@ -190,7 +194,7 @@ struct CropViewControllerWrapper: UIViewControllerRepresentable {
         cropViewController.aspectRatioPreset = .presetSquare
         cropViewController.aspectRatioLockEnabled = true
         cropViewController.resetAspectRatioEnabled = false
-
+        
         return cropViewController
     }
     
