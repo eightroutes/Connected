@@ -3,7 +3,7 @@ import FirebaseAuth
 import MapKit
 import CoreLocation
 
-struct mainMap: View {
+struct MainMap: View {
     @StateObject private var firestoreManager = FirestoreManager()
     @StateObject private var locationManager = LocationManager()
     @State private var showProfileDetail = false
@@ -68,9 +68,6 @@ struct mainMap: View {
 }
 
 
-#Preview {
-    mainMap()
-}
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
@@ -97,7 +94,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 }
 
-#Preview {
-    mainMap()
-}
 
+
+#Preview {
+    MainMap()
+}

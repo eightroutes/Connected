@@ -6,6 +6,8 @@ class NotificationManager: ObservableObject {
     @Published var receivedNotifications: [Notification] = []
     @Published var sentNotifications: [Notification] = []
     
+
+    
     func fetchNotifications(for userId: String) {
         let db = Firestore.firestore()
         
@@ -58,26 +60,27 @@ struct Notification: Identifiable {
 
 struct NotificationView: View {
     @StateObject private var notificationManager = NotificationManager()
-    @State private var navigationPath = NavigationPath()
+//    @State private var navigationPath = NavigationPath()
     
     var body: some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationView {
             List {
-                Section(header: Text("받은 요청")) {
-                    ForEach(notificationManager.receivedNotifications) { notification in
-                        if notification.type == "friendRequest" {
-                            FriendRequestNotificationView(notification: notification)
-                        }
+                ForEach(notificationManager.receivedNotifications) { notification in
+                    if notification.type == "friendRequest" {
+                        FriendRequestNotificationView(notification: notification)
                     }
                 }
                 
-                Section(header: Text("보낸 요청")) {
-                    ForEach(notificationManager.sentNotifications) { notification in
-                        if notification.type == "friendRequest" {
-                            SentFriendRequestView(notification: notification)
-                        }
+                
+                ForEach(notificationManager.sentNotifications) { notification in
+                    if notification.type == "friendRequest" {
+                        SentFriendRequestView(notification: notification)
                     }
                 }
+                
+                
+                
+                
             }
             .listStyle(.plain)
             .navigationBarTitle("알림")
@@ -94,6 +97,8 @@ struct NotificationView: View {
 struct FriendRequestNotificationView: View {
     let notification: Notification
     
+    @StateObject private var friendsViewModel = FriendsViewModel()
+
     
     var body: some View {
         HStack {
@@ -116,7 +121,7 @@ struct FriendRequestNotificationView: View {
             if let error = error {
                 print("Error accepting friend request: \(error.localizedDescription)")
             } else {
-                addFriend(userId1: notification.toUserId, userId2: notification.fromUserId)
+                friendsViewModel.addFriend(userId1: notification.toUserId, userId2: notification.fromUserId)
             }
         }
     }
@@ -145,20 +150,32 @@ struct FriendRequestNotificationView: View {
 
 struct SentFriendRequestView: View {
     let notification: Notification
+    @State private var recipientName: String = ""
+    @State private var profileImageURL: String = ""
     
     var body: some View {
         HStack {
-            Text("친구 요청을 보냈습니다.")
+            UserProfileImage(imageURL: profileImageURL)
+                .frame(width: 40, height: 40)
+            
+            VStack(alignment: .leading) {
+                Text("\(recipientName)에게 친구 요청을 보냈습니다.")
+                    .lineLimit(1)
+                Text(notification.status.capitalized)
+                    .foregroundColor(statusColor(for: notification.status))
+                    .font(.caption)
+            }
             Spacer()
-            Text(notification.status.capitalized)
-                .foregroundColor(statusColor(for: notification.status))
+        }
+        .onAppear {
+            fetchRecipientInfo()
         }
     }
     
     func statusColor(for status: String) -> Color {
         switch status {
         case "pending":
-            return .orange
+            return .gray
         case "accepted":
             return .green
         case "rejected":
@@ -167,4 +184,59 @@ struct SentFriendRequestView: View {
             return .gray
         }
     }
+    
+    func fetchRecipientInfo() {
+        let db = Firestore.firestore()
+        db.collection("users").document(notification.toUserId).getDocument { (document, error) in
+            
+            if let document = document, document.exists {
+                let data = document.data()
+                self.recipientName = data?["Name"] as? String ?? "Unknown"
+                self.profileImageURL = data?["profile_image"] as? String ?? ""
+                
+                print("Fetching document for user ID: \(notification.toUserId)")
+
+
+            } else {
+                print("Document does not exist")
+            }
+        }
+    }
+}
+
+struct UserProfileImage: View {
+    let imageURL: String
+    
+    var body: some View {
+        if let url = URL(string: imageURL) {
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                case .success(let image):
+                    image.resizable()
+                         .aspectRatio(contentMode: .fill)
+                         .clipShape(Circle())
+                case .failure:
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.gray)
+                @unknown default:
+                    EmptyView()
+                }
+            }
+        } else {
+            Image(systemName: "person.circle.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .foregroundColor(.gray)
+        }
+    }
+}
+
+
+
+#Preview{
+    NotificationView()
 }

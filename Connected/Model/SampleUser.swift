@@ -10,7 +10,7 @@ import UIKit
 
 
 extension UserLocation {
-    static var sampleUser: UserLocation {
+    static var SampleUser: UserLocation {
         UserLocation(
             id: "sample_id",
             name: "John Doe",

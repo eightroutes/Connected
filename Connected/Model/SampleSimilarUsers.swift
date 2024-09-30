@@ -9,7 +9,7 @@ import Foundation
 
 
 struct sample {
-    let sampleSimilarUsers: [User] = [
+    let SampleSimilarUsers: [User] = [
         User(
             id: "4RiOmoSZXAhV3bMAZwh8T5D6ywQ2",
             name: "Kevin",

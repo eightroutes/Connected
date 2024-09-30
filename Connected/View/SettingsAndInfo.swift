@@ -3,11 +3,16 @@ import Firebase
 import FirebaseFirestore
 import FirebaseAuth
 
+
 struct SettingsAndInfo: View {
     @State private var notificationsEnabled = true
     @State private var showLogoutAlert = false
-    @EnvironmentObject var viewModel: signInViewModel
+    @EnvironmentObject var viewModel: SignInViewModel
     @State private var friends: [User] = []
+    @State private var currentUserId: String?
+    
+    @State private var shouldNavigateToSignIn = false
+    
     
     
     
@@ -15,6 +20,12 @@ struct SettingsAndInfo: View {
         ZStack {
             VStack(spacing: 0) {
                 List {
+                    NavigationLink(destination: ProfileDetail(userId: currentUserId ?? "")) {
+                        Text("내 프로필")
+                        
+                        
+                    }
+                    
                     Section(header: Text("친구")) {
                         ForEach(friends) { friend in
                             NavigationLink(destination: ProfileDetail(userId: friend.id)) {
@@ -43,6 +54,12 @@ struct SettingsAndInfo: View {
                     }
                 }
                 .listStyle(GroupedListStyle())
+                .navigationTitle("설정")
+                
+                .onAppear{
+                    // 현재 로그인한 사용자의 ID 가져오기
+                    currentUserId = Auth.auth().currentUser?.uid
+                }
             }
         }
         .onAppear {
@@ -53,13 +70,16 @@ struct SettingsAndInfo: View {
                 title: Text("로그아웃"),
                 message: Text("정말 로그아웃 하시겠습니까?"),
                 primaryButton: .destructive(Text("로그아웃")) {
-                    signOut()
+                    viewModel.signOut()
+                    NavigationLink("", isActive: $shouldNavigateToSignIn) {
+                        SignIn()
+                    }
                 },
                 secondaryButton: .cancel(Text("취소"))
             )
         }
-        .navigationDestination(isPresented: .constant(!viewModel.isSignedIn)) {
-            signIn().environmentObject(viewModel)  // 올바른 environmentObject 전달 방식
+        .navigationDestination(isPresented: .constant(viewModel.signState == .signIn)) {
+            SignIn().environmentObject(viewModel)  // 올바른 environmentObject 전달 방식
         }
     }
     
@@ -91,19 +111,12 @@ struct SettingsAndInfo: View {
             }
         }
     }
-    func signOut() {
-        do {
-            try Auth.auth().signOut()
-            DispatchQueue.main.async {
-                viewModel.isSignedIn = false
-            }
-        } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
-        }
-    }
+    
+    
+    
 }
 
 #Preview {
     SettingsAndInfo()
-        .environmentObject(signInViewModel())
+        .environmentObject(SignInViewModel())
 }

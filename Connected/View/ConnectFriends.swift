@@ -7,24 +7,14 @@
 
 
 
-struct User: Identifiable {
-    let id: String
-    let name: String
-    let profileImage: String
-    let interests: [String]
-    let selectedColor: String
-    let selectedMBTI: String
-    let musicGenres: [String]
-    let movieGenres: [String]
-}
-
 
 import SwiftUI
 import Firebase
 import FirebaseFirestore
 import FirebaseAuth
+import SDWebImageSwiftUI
 
-struct connectFriends: View {
+struct ConnectFriends: View {
     @StateObject private var firestoreManager = FirestoreManager()
     @State private var isLoading = true
     @State private var similarUsers: [User] = []
@@ -64,7 +54,7 @@ struct connectFriends: View {
                     ForEach(similarUsers) { user in
                         VStack {
                             HStack(spacing: 15) {
-                                AsyncImage(url: URL(string: user.profileImage)) { image in
+                                WebImage(url: URL(string: user.profileImageURL)) { image in
                                     image.resizable()
                                 } placeholder: {
                                     Image(systemName: "person.circle.fill")
@@ -199,7 +189,7 @@ struct connectFriends: View {
         @State static var userId: String? = nil
         
         static var previews: some View {
-            connectFriends(userId: $userId)
+            ConnectFriends(userId: $userId)
                 .environmentObject(FirestoreManager())
         }
     }
@@ -241,7 +231,7 @@ struct searchingNewFriends_Previews: PreviewProvider {
     @State static var userId: String? = nil
     
     static var previews: some View {
-        connectFriends(userId: $userId)
-            .environmentObject(FirestoreManager())
+        ConnectFriends(userId: $userId)
+//            .environmentObject(FirestoreManager())
     }
 }

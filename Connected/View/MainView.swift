@@ -1,19 +1,21 @@
 import SwiftUI
 import FirebaseAuth
 
-struct mainView: View {
+struct MainView: View {
     @State private var selectedTab = 0
     @State private var showProfileDetail = false
     @State private var userId: String?
     
+    @EnvironmentObject var viewModel: SignInViewModel
+
+    
     var body: some View {
         TabView(selection: $selectedTab){
             ZStack {
-                mainMap()
+                MainMap()
                 ProfileView(userId: $userId)
                     .padding(.bottom, 650)
-                    .onAppear{selectedTab = 0}
-                    .tag(0)
+                    
                 
             }
             .tabItem {
@@ -21,8 +23,10 @@ struct mainView: View {
                     .padding(.top, 10)
                     .environment(\.symbolVariants, selectedTab == 0 ?.fill: .none)
             }
+            .onAppear{selectedTab = 0}
+            .tag(0)
             
-            Text("Feed")
+            FeedView()
                 .tabItem {
                     Image(systemName: selectedTab == 1 ? "magnifyingglass" : "magnifyingglass")
                         .environment(\.symbolVariants, selectedTab == 1 ? .fill : .none)
@@ -30,7 +34,7 @@ struct mainView: View {
                 .onAppear { selectedTab = 1 }
                 .tag(1)
             
-            connectFriends(userId: $userId)
+            ConnectFriends(userId: $userId)
                 .tabItem {
                     Image(selectedTab == 4 ? "center" : "centerGray")
                         .environment(\.symbolVariants, selectedTab == 4 ? .fill : .none)
@@ -38,7 +42,7 @@ struct mainView: View {
                 .onAppear { selectedTab = 4 }
                 .tag(4)
             
-            message()
+            MainMessagesView()
                 .tabItem {
                     Image(systemName: selectedTab == 2 ? "message.fill" : "message")
                         .environment(\.symbolVariants, selectedTab == 2 ? .fill : .none)
@@ -66,12 +70,10 @@ struct mainView: View {
     }
 }
 
-struct message: View {
-    var body: some View {
-        Text("messages")
-    }
-}
+
 
 #Preview {
-    mainView()
+    MainView()
+        .environmentObject(SignInViewModel())
+
 }

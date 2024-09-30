@@ -7,16 +7,17 @@ struct ProfileDetail: View {
     @StateObject private var viewModel = ProfileDetailViewModel()
     @State private var selectedImageIndex = 0
     
-//    @Environment(\.presentationMode) var presentationMode
-//    @EnvironmentObject var navigationState: NavigationState
+    //    @Environment(\.presentationMode) var presentationMode
+    //    @EnvironmentObject var navigationState: NavigationState
     @State private var navigationPath = NavigationPath()
-
+    @State private var showNextView = false
+    
     
     let userId: String
-
+    
     
     var body: some View {
-        NavigationStack(path: $navigationPath){
+        NavigationStack(path: $navigationPath) {
             ZStack{
                 VStack {
                     // Swipeable Image Gallery
@@ -89,6 +90,28 @@ struct ProfileDetail: View {
                                         .foregroundColor(.pink)
                                         .font(.title)
                                 }
+                                
+                                
+//                                // 메시지 버튼 설정
+//                                if userId != Auth.auth().currentUser?.uid{
+//                                    
+//                                    Button(action: {
+//                                        navigationPath.append("MessageView")
+//                                    }) {
+//                                        Text("메시지")
+//                                            .background(Color.brand)
+//                                            .foregroundColor(.white)
+//                                            .cornerRadius(10)
+//                                            .frame(width:100,height: 50)
+//                                        
+//                                    }
+//                                    .padding()
+//                                    .navigationDestination(isPresented: $showNextView)
+//                                    {
+//                                        MessageView()
+//                                    }
+//                                }
+                                
                             }
                             .padding(.bottom, 10)
                             
@@ -107,7 +130,7 @@ struct ProfileDetail: View {
                 .onAppear {
                     viewModel.fetchUserProfile(for: userId) // 전달받은 UID로 프로필 데이터 불러오기
                 }
-//                .ignoresSafeArea()
+                //                .ignoresSafeArea()
                 
             }
         }
@@ -117,8 +140,8 @@ struct ProfileDetail: View {
     func tagView(title: String, items: [String]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(title)
-               .font(.headline)
-               .fontWeight(.bold)
+                .font(.headline)
+                .fontWeight(.bold)
             FlexibleView(data: items) { item in
                 if title == "MBTI" {
                     Text(item.uppercased())
@@ -147,10 +170,10 @@ struct ProfileDetail: View {
         }
     }
 }
-    
+
 
 #Preview {
-    ProfileDetail(userId: UserLocation.sampleUser.id)
+    ProfileDetail(userId: UserLocation.SampleUser.id)
 }
 
 

@@ -16,13 +16,12 @@ struct ProfileImageSetting: View {
     let storage = Storage.storage()
     
     var body: some View {
-        NavigationStack(path: $navigationPath){
+        NavigationStack(path: $navigationPath) {
             ZStack {
                 VStack {
-                    ZStack {
+                    ZStack(alignment: .leading){
                         Rectangle()
                             .frame(width: UIScreen.main.bounds.width / 7 * 6, height: 5)
-                            .padding(.leading, -200)
                         Rectangle()
                             .frame(width: UIScreen.main.bounds.width, height: 5)
                             .foregroundStyle(Color.gray)
@@ -32,7 +31,7 @@ struct ProfileImageSetting: View {
                     Text("프로필을 설정해주세요")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                        .padding(.top, 40)
+                        .padding(.top, 110)
                         .padding(.bottom, 80)
                     
                     ZStack {
@@ -87,8 +86,10 @@ struct ProfileImageSetting: View {
                             .cornerRadius(30)
                     }
                     .disabled(profileImage == nil)
-                    .background(NavigationLink(destination: setImages(), isActive: $showNextScreen){})
-                    //                    .hidden()
+                    .navigationDestination(isPresented: $showNextScreen)
+                    {
+                        SetImages()
+                    }                    //                    .hidden()
                 }
             }
             .sheet(isPresented: $showingImagePicker) {

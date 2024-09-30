@@ -6,7 +6,7 @@ import FirebaseAuth
 import CropViewController
 
 
-struct setImages: View {
+struct SetImages: View {
     @State private var inputName = ""
     @State private var showNextScreen = false
     @State private var navigationPath = NavigationPath()
@@ -22,10 +22,9 @@ struct setImages: View {
         NavigationStack(path: $navigationPath){
             ZStack {
                 VStack {
-                    ZStack {
+                    ZStack(alignment: .leading) {
                         Rectangle()
                             .frame(width: UIScreen.main.bounds.width/7*6, height: 5)
-                            .padding(.leading, -200)
                         Rectangle()
                             .frame(width: UIScreen.main.bounds.width, height: 5)
                             .foregroundStyle(Color.gray)
@@ -104,8 +103,12 @@ struct setImages: View {
                             .cornerRadius(30)
                     }
                     .disabled(!profileImages.contains(where: { $0 != nil }))
-                    .background(NavigationLink(destination: mainView(), isActive: $showNextScreen){})
-                    //                    .hidden()
+//                    NavigationLink(destination: MainView(), isActive: $showNextScreen){}
+//                    //                    .hidden()
+                    .navigationDestination(isPresented: $showNextScreen)
+                    {
+                        MainView()
+                    }
                 }
                 
             }
@@ -242,7 +245,7 @@ struct CropViewControllerWrapperS: UIViewControllerRepresentable {
 
 struct setImages_Previews: PreviewProvider {
     static var previews: some View {
-        setImages()
+        SetImages()
     }
 }
 

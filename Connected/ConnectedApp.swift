@@ -66,7 +66,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 @main
 struct ConnectedApp: App {
-    @StateObject private var viewModel = signInViewModel()
+    @StateObject private var viewModel = SignInViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     

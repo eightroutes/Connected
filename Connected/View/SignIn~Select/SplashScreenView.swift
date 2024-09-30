@@ -10,23 +10,24 @@ import SwiftUI
 struct SplashScreenView: View {
     @State private var isActive = false
     
+    
     // 초기값 설정
     @State private var size = 0.8
     @State private var opacity = 0.1
 
-    @StateObject private var viewModel = ProfileDetailViewModel()
+    @StateObject private var viewModel = SignInViewModel()
 
     
     
     var body: some View {
         
         if isActive {
-            if viewModel.isSignedIn &&  viewModel.userImages.count >= 1 {
-                mainView()
+            if viewModel.signState == .signIn {
+                MainView()
             } else {
-                signIn()
+                SignIn()
             }
-//            signIn()
+//            SignIn()
             
         } else{
             VStack{
@@ -44,6 +45,8 @@ struct SplashScreenView: View {
             }
             .tint(.black)
             .onAppear {
+//                viewModel.checkAndUpdateSignInStatus() // 로그인 상태를 확인
+
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     withAnimation {
                         self.isActive = true

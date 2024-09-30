@@ -10,7 +10,7 @@ import FirebaseCore
 import FirebaseFirestore
 import FirebaseAuth
 
-struct aboutYourself: View {
+struct AboutYourself: View {
     
     @State private var navigationPath = NavigationPath()
     @State private var showNextScreen = false
@@ -22,12 +22,11 @@ struct aboutYourself: View {
     let db = Firestore.firestore()
     
     var body: some View {
-        NavigationStack(path: $navigationPath){
+        NavigationStack(path: $navigationPath) {
             VStack {
-                ZStack {
+                ZStack(alignment: .leading){
                     Rectangle()
                         .frame(width: UIScreen.main.bounds.width/7*4, height: 5)
-                        .padding(.leading, -200)
                     Rectangle()
                         .frame(width: UIScreen.main.bounds.width, height: 5)
                         .foregroundStyle(Color.gray)
@@ -57,6 +56,7 @@ struct aboutYourself: View {
                                 .fontWeight(.bold)
                                 .lineLimit(1)
                                 .padding(.leading, 5.0)
+                            
                             
                             HStack{
                                 colorButton(color: "red", colorStr: "빨간색", colorCode: .red, selectedColor: $selectedColor)
@@ -177,7 +177,7 @@ struct aboutYourself: View {
                             
                             
                         }
-                        .padding(.bottom, -200.0)
+                        .padding(.bottom, -390)
                         .padding(.horizontal, 20)
                     }
                 }
@@ -230,21 +230,24 @@ struct aboutYourself: View {
                         .cornerRadius(30)
                 }
                 .disabled(selectedMBTI == nil || selectedColor == nil || musicGenres.isEmpty || movieGenres.isEmpty)
-                .background(
-                    NavigationLink(destination: interests(), isActive: $showNextScreen) {
-                    }
-                )
+                .navigationDestination(isPresented: $showNextScreen)
+                {
+                    Interests()
+                }
+                
+                
                 
             }
             .tint(.black)
-//            .background(Color.brandBack)
+            //            .background(Color.brandBack)
         }
         
     }
 }
 
+
 #Preview {
-    aboutYourself()
+    AboutYourself()
 }
 
 

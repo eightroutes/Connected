@@ -3,7 +3,7 @@ import FirebaseCore
 import FirebaseFirestore
 import FirebaseAuth
 
-struct interests: View {
+struct Interests: View {
     
     @State private var navigationPath = NavigationPath()
     @State private var showNextScreen = false
@@ -14,10 +14,9 @@ struct interests: View {
     var body: some View {
         NavigationStack(path: $navigationPath){
             VStack {
-                ZStack {
+                ZStack(alignment: .leading){
                     Rectangle()
                         .frame(width: UIScreen.main.bounds.width/7*5, height: 5)
-                        .padding(.leading, -200)
                     Rectangle()
                         .frame(width: UIScreen.main.bounds.width, height: 5)
                         .foregroundStyle(Color.gray)
@@ -34,7 +33,7 @@ struct interests: View {
                 Rectangle()
                     .frame(width:UIScreen.main.bounds.width, height: 1)
                     .foregroundStyle(Color.gray)
-                    .padding(.bottom, 5)
+                    .padding(.bottom, 20)
                 
                 ScrollView {
                     VStack(alignment: .leading) {
@@ -95,8 +94,10 @@ struct interests: View {
                                 .cornerRadius(30)
                         }
                         .disabled(intr.count < 5)
-                        .background(NavigationLink(destination: ProfileImageSetting(), isActive: $showNextScreen){})
-                    
+                        .navigationDestination(isPresented: $showNextScreen)
+                        {
+                            ProfileImageSetting()
+                        }
                 }
                 
             }
@@ -124,7 +125,7 @@ struct interests: View {
 
 
 #Preview {
-    interests()
+    Interests()
 }
 
 struct intrButton: View {
