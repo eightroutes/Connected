@@ -15,12 +15,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         let db = Firestore.firestore()
         print(db)
         
-//        
-//        if let kakaoAppKey = Bundle.main.infoDictionary?["KAKAO_NATIVE_APP_KEY"] as? String {
-//            KakaoSDK.initSDK(appKey: kakaoAppKey)
-//        } else {
-//            print("Kakao App Key not found")
-//        }
+        
+        if let kakaoAppKey = Bundle.main.infoDictionary?["KAKAO_NATIVE_APP_KEY"] as? String {
+            KakaoSDK.initSDK(appKey: kakaoAppKey)
+        } else {
+            print("Kakao App Key not found")
+        }
         
         
         IQKeyboardManager.shared.enable = true
@@ -35,11 +35,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         
-//        // KakaoTalk 로그인 URL 처리
-//        if (AuthApi.isKakaoTalkLoginUrl(url)) {
-//            return AuthController.handleOpenUrl(url: url)
-//        }
-        
+        // KakaoTalk 로그인 URL 처리
+        if (AuthApi.isKakaoTalkLoginUrl(url)) {
+            return AuthController.handleOpenUrl(url: url)
+        }
         // Google 로그인 URL 처리
         return GIDSignIn.sharedInstance.handle(url)
     }
@@ -67,17 +66,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 @main
 struct ConnectedApp: App {
-<<<<<<< Updated upstream
     @StateObject private var viewModel = signInViewModel()
-=======
->>>>>>> Stashed changes
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
     
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashScreenView()
+                .environmentObject(viewModel) // environmentObject로 viewModel을 전달
         }
     }
     
