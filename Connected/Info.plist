@@ -14,30 +14,9 @@
 				<string>com.googleusercontent.apps.1026010484068-a5if7mpjaee6vqp3eea6v55prckqhv0r</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>kakao${KAKAO_NATIVE_APP_KEY}</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>oidc.kakao</string>
-			</array>
-		</dict>
 	</array>
-	<key>KAKAO_NATIVE_APP_KEY</key>
-	<string>${KAKAO_NATIVE_APP_KEY}</string>
 	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>kakaokompassauth</string>
-		<string>kakaolink</string>
-	</array>
+	<array/>
 	<key>NSAppTransportSecurity</key>
 	<dict/>
 	<key>UIBackgroundModes</key>

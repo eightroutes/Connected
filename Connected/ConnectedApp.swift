@@ -4,8 +4,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import IQKeyboardManagerSwift
 import GoogleSignIn
-import KakaoSDKAuth
-import KakaoSDKCommon
+
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
@@ -15,12 +14,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         let db = Firestore.firestore()
         print(db)
         
-        
-        if let kakaoAppKey = Bundle.main.infoDictionary?["KAKAO_NATIVE_APP_KEY"] as? String {
-            KakaoSDK.initSDK(appKey: kakaoAppKey)
-        } else {
-            print("Kakao App Key not found")
-        }
         
         
         IQKeyboardManager.shared.enable = true
@@ -35,45 +28,22 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         
-        // KakaoTalk 로그인 URL 처리
-        if (AuthApi.isKakaoTalkLoginUrl(url)) {
-            return AuthController.handleOpenUrl(url: url)
-        }
         // Google 로그인 URL 처리
         return GIDSignIn.sharedInstance.handle(url)
     }
     
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        let sceneConfiguration = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
-        
-        sceneConfiguration.delegateClass = SceneDelegate.self
-        
-        return sceneConfiguration
-    }
-    
 }
 
-// 카카오
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        if let url = URLContexts.first?.url {
-            if (AuthApi.isKakaoTalkLoginUrl(url)) {
-                _ = AuthController.handleOpenUrl(url: url)
-            }
-        }
-    }
-}
+
 
 @main
 struct ConnectedApp: App {
-    @StateObject private var viewModel = SignInViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     
     var body: some Scene {
         WindowGroup {
-            SplashScreenView()
-                .environmentObject(viewModel) // environmentObject로 viewModel을 전달
+            ContentView()
         }
     }
     
