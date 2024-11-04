@@ -1,7 +1,6 @@
 import FirebaseStorage
 import FirebaseFirestore
 import FirebaseAuth
-import Kingfisher
 
 class ProfileDetailViewModel: ObservableObject {
     private var imageCounts = 6

@@ -13,12 +13,12 @@ struct MainView: View {
                 ZStack {
                     switch selectedTab {
                     case 0:
-                        ZStack(alignment: .topLeading) {
-                            MainMap()
-                                .ignoresSafeArea(edges: .all) // 전체 화면을 채우도록 설정
-                            ProfileView(user: user)
-                                .padding(.leading, 20) // 상단 패딩 제거
-                        }
+                       ZStack(alignment: .topLeading) {
+                           MainMap()
+                           ProfileView(user: user)
+                               .padding(.leading, 20)
+                               .padding(.top, 20)
+                       }
                     case 1:
                         FeedView()
                     case 2:
@@ -33,13 +33,15 @@ struct MainView: View {
                 
                 // Custom TabBar view at the bottom
                 CustomTabBar(selectedTab: $selectedTab)
-                    .frame(height: 60)
-                    .background(Color.white) // 배경색 추가
+                    .frame(height: 48)
+                    .background(Color.white)
+                    .ignoresSafeArea(edges: .bottom)
             }
-            .ignoresSafeArea(edges: .top) // 상단 공백 제거
         }
+        .navigationBarHidden(true)
         .tint(.black)
-        .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
+
     }
 }
 

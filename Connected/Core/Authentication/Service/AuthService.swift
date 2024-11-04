@@ -1,4 +1,5 @@
 import Foundation
+import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
 import Firebase
@@ -43,23 +44,6 @@ class AuthService: ObservableObject {
         }
     }
     
-    
-//    @MainActor
-//    func loadUserData() async throws {
-//        self.userSession = Auth.auth().currentUser
-//        guard let currentUid = self.userSession?.uid else {
-//            print("DEBUG: No current user session found")
-//            return
-//        }
-//        do {
-//            self.currentUser = try await UserService.fetchUser(withUid: currentUid)
-//            print("DEBUG: Successfully loaded user data for uid: \(currentUid)")
-//        } catch {
-//            print("DEBUG: Failed to load user data with error \(error.localizedDescription)")
-//            throw error
-//        }
-//    }
-    
     @MainActor
     func loadUserData() async throws {
         self.userSession = Auth.auth().currentUser
@@ -86,15 +70,24 @@ class AuthService: ObservableObject {
     
     
     func signOut() {
-        try? Auth.auth().signOut()
-        self.userSession = nil
-        self.currentUser = nil
-        isSignedIn = false
+        do {
+            try Auth.auth().signOut()
+            DispatchQueue.main.async {
+                self.userSession = nil
+                self.currentUser = nil
+                self.isSignedIn = false
+            }
+        } catch let signOutError as NSError {
+            print("Error signing out: \(signOutError.localizedDescription)")
+        }
+        
     }
     
     private func uploadUserData(uid: String, email: String) async throws {
         let user = User(id: uid, email: email)
-        self.currentUser = user
+        DispatchQueue.main.async {
+            self.currentUser = user
+        }
         do {
             let encodedUser = try Firestore.Encoder().encode(user)
             try await Firestore.firestore().collection("users").document(user.id).setData(encodedUser, merge: true)

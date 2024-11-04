@@ -15,10 +15,6 @@
 		662830022BC35B0B0010EFAD /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 662830012BC35B0B0010EFAD /* ConnectedApp.swift */; };
 		662830062BC35B0C0010EFAD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 662830052BC35B0C0010EFAD /* Assets.xcassets */; };
 		662830092BC35B0C0010EFAD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 662830082BC35B0C0010EFAD /* Preview Assets.xcassets */; };
-		662B85A92C02F19B008F14E6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 662B85A82C02F19B008F14E6 /* FirebaseAnalytics */; };
-		662B85AB2C02F19B008F14E6 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 662B85AA2C02F19B008F14E6 /* FirebaseAnalyticsOnDeviceConversion */; };
-		662B85AD2C02F19B008F14E6 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 662B85AC2C02F19B008F14E6 /* FirebaseAnalyticsSwift */; };
-		662B85AF2C02F19B008F14E6 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 662B85AE2C02F19B008F14E6 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		662F28D72C62124400106ADE /* CropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 662F28D62C62124400106ADE /* CropViewController */; };
 		662F28D92C62124400106ADE /* TOCropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 662F28D82C62124400106ADE /* TOCropViewController */; };
 		66588E252C37D47100D70BCB /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 66588E242C37D47100D70BCB /* FirebaseStorage */; };
@@ -64,11 +60,7 @@
 				6611D3C42C2ABB4600650D01 /* FirebaseAuth in Frameworks */,
 				66032B222C0DBA8A00517F96 /* IQKeyboardManagerSwift in Frameworks */,
 				66DCB9A22C2A8879000C7736 /* GoogleSignIn in Frameworks */,
-				662B85AD2C02F19B008F14E6 /* FirebaseAnalyticsSwift in Frameworks */,
-				662B85A92C02F19B008F14E6 /* FirebaseAnalytics in Frameworks */,
-				662B85AB2C02F19B008F14E6 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				66588E252C37D47100D70BCB /* FirebaseStorage in Frameworks */,
-				662B85AF2C02F19B008F14E6 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				6609BFD62C0D8E5200CC8C4E /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -155,10 +147,6 @@
 			);
 			name = Connected;
 			packageProductDependencies = (
-				662B85A82C02F19B008F14E6 /* FirebaseAnalytics */,
-				662B85AA2C02F19B008F14E6 /* FirebaseAnalyticsOnDeviceConversion */,
-				662B85AC2C02F19B008F14E6 /* FirebaseAnalyticsSwift */,
-				662B85AE2C02F19B008F14E6 /* FirebaseAnalyticsWithoutAdIdSupport */,
 				6609BFD52C0D8E5200CC8C4E /* FirebaseFirestore */,
 				66032B212C0DBA8A00517F96 /* IQKeyboardManagerSwift */,
 				66DCB9A12C2A8879000C7736 /* GoogleSignIn */,
@@ -535,26 +523,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 662B85A72C02F19B008F14E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
-		};
-		662B85A82C02F19B008F14E6 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 662B85A72C02F19B008F14E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
-		662B85AA2C02F19B008F14E6 /* FirebaseAnalyticsOnDeviceConversion */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 662B85A72C02F19B008F14E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalyticsOnDeviceConversion;
-		};
-		662B85AC2C02F19B008F14E6 /* FirebaseAnalyticsSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 662B85A72C02F19B008F14E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalyticsSwift;
-		};
-		662B85AE2C02F19B008F14E6 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 662B85A72C02F19B008F14E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalyticsWithoutAdIdSupport;
 		};
 		662F28D62C62124400106ADE /* CropViewController */ = {
 			isa = XCSwiftPackageProductDependency;

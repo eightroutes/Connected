@@ -16,9 +16,10 @@ struct ContentView: View {
     let db = Firestore.firestore()
     
 //     테스트 시 자동 로그아웃
-    init() {
-        AuthService.shared.signOut()
-    }
+//    init() {
+//        AuthService.shared.signOut()
+//    }
+    
     
     var body: some View {
         if isActive {
@@ -28,6 +29,7 @@ struct ContentView: View {
                         .environmentObject(registrationViewModel)
                         .environmentObject(loginViewModel)
                 } else if let currentUser = authService.currentUser {
+
                     if hasImages {
                         MainView(user: currentUser)
                     } else {
@@ -36,14 +38,21 @@ struct ContentView: View {
                 } else {
                     // 사용자 데이터 로딩 중
                     Text("Loading user data...")
+                        .onAppear {
+                            loadUserData()
+                        }
                 }
             }
-            .onChange(of: authService.currentUser) { newCurrentUser in
-                print("currentUser changed: \(String(describing: newCurrentUser))")
-                if let user = newCurrentUser {
-                    checkForOtherImages(userId: user.id ?? UUID().uuidString)
-                }
-            }
+            .onAppear {
+                   if let currentUser = authService.currentUser {
+                       checkForOtherImages(userId: currentUser.id ?? "")
+                   }
+               }
+               .onChange(of: authService.currentUser) { newCurrentUser in
+                   if let user = newCurrentUser {
+                       checkForOtherImages(userId: user.id ?? "")
+                   }
+               }
         } else {
             VStack {
                 VStack {
@@ -56,8 +65,11 @@ struct ContentView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     withAnimation {
                         self.isActive = true
-                        if let currentUser = authService.currentUser {
-                            checkForOtherImages(userId: currentUser.id)
+//                        if let currentUser = authService.currentUser {
+//                            checkForOtherImages(userId: currentUser.id)
+//                        }
+                        if authService.userSession != nil && authService.currentUser == nil {
+                            loadUserData()
                         }
                     }
                 }
@@ -65,6 +77,17 @@ struct ContentView: View {
         }
     }
     
+    private func loadUserData() {
+        Task {
+            do {
+                try await authService.loadUserData()
+            } catch {
+                print("Error loading user data: \(error)")
+                // Handle error appropriately
+            }
+        }
+    }
+
     private func checkForOtherImages(userId: String) {
         let document = db.collection("users").document(userId)
         document.getDocument { (document, error) in

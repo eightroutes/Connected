@@ -12,7 +12,7 @@ struct SettingsAndInfo: View {
     
     
     var body: some View {
-        ZStack {
+        NavigationStack {
             VStack(spacing: 0) {
                 List {
                     NavigationLink(destination: ProfileDetail(user: currentUser)) {

@@ -7,10 +7,11 @@ import Kingfisher
 struct ProfileDetail: View {
     @StateObject private var viewModel = ProfileDetailViewModel()
     
-
     @State private var selectedImageIndex = 0
     @State private var navigationPath = NavigationPath()
-    @State private var showNextView = false
+    @State private var showMessageView = false
+    @State private var selectedChatUser: ChatUser?
+
     
     let user: User
     
@@ -36,41 +37,66 @@ struct ProfileDetail: View {
                         VStack(alignment: .leading, spacing: 20) {
                             // Profile Photo and Name
                             HStack(spacing: 20) {
-                                if let profileImageUrl = viewModel.profileImageUrl {
-                                    KFImage(URL(string: profileImageUrl))
-                                        .resizable()
-                                        .clipShape(Circle())
-                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                        .shadow(radius: 1)
-                                        .frame(width: 50, height: 50)
-                                } else {
-                                    Image(systemName: "person.circle.fill")
-                                        .resizable()
-                                        .clipShape(Circle())
-                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                        .shadow(radius: 1)
-                                        .frame(width: 50, height: 50)
-                                        .foregroundColor(.gray)
-                                }
+                                // 프로필 이미지
+//                                if let profileImageUrl = viewModel.profileImageUrl {
+//                                    KFImage(URL(string: profileImageUrl))
+//                                        .resizable()
+//                                        .clipShape(Circle())
+//                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+//                                        .shadow(radius: 1)
+//                                        .frame(width: 50, height: 50)
+//                                } else {
+//                                    Image(systemName: "person.circle.fill")
+//                                        .resizable()
+//                                        .clipShape(Circle())
+//                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+//                                        .shadow(radius: 1)
+//                                        .frame(width: 50, height: 50)
+//                                        .foregroundColor(.gray)
+//                                }
                                 
                                 Text(viewModel.userName)
                                     .font(.title)
                                     .fontWeight(.bold)
+                                    .lineLimit(1)
                                 
                                 if let userAge = viewModel.userAge {
                                     Text("\(userAge)")
-                                        .font(.title)
+                                        .font(.title3)
                                 }
                                 
                                 if viewModel.userGender == "male" {
                                     Text("남")
                                         .foregroundColor(.blue)
-                                        .font(.title)
+                                        .font(.title3)
                                 } else {
                                     Text("여")
                                         .foregroundColor(.pink)
-                                        .font(.title)
+                                        .font(.title3)
                                 }
+                                Spacer()
+                                Button(action: {
+                                    
+                                }) {
+                                    Image(systemName: "person.badge.plus")
+                                        .font(.title3)
+                                }
+                                Button(action: {
+                                    selectedChatUser = ChatUser(user: user)
+                                    showMessageView = true
+                                    
+                                }) {
+                                    Image(systemName: "plus.message")
+                                        .font(.title3)
+                                }
+                                .navigationDestination(isPresented: $showMessageView){
+                                    if let chatUser = selectedChatUser {
+                                        ChatLogView(chatUser: chatUser)
+                                    } else {
+                                        Text("No chat user selected")
+                                    }
+                                }
+                        
                             }
                             .padding(.bottom, 10)
                             
