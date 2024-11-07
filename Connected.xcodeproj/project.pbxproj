@@ -19,6 +19,7 @@
 		662F28D92C62124400106ADE /* TOCropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 662F28D82C62124400106ADE /* TOCropViewController */; };
 		66588E252C37D47100D70BCB /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 66588E242C37D47100D70BCB /* FirebaseStorage */; };
 		6671E85A2C6F4BB900A0FB14 /* SampleUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6671E8592C6F4BB900A0FB14 /* SampleUser.swift */; };
+		668DB1762CD8D36D00BD83C8 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 668DB1752CD8D36D00BD83C8 /* FirebaseFirestoreSwift */; };
 		66D17F652CA25DB600C96540 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 66D17F642CA25DB600C96540 /* GoogleService-Info.plist */; };
 		66DC52AB2CD476AD003F5A33 /* UserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DC52AA2CD476AD003F5A33 /* UserLocation.swift */; };
 		66DC52AD2CD477F8003F5A33 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DC52AC2CD477F8003F5A33 /* User.swift */; };
@@ -57,6 +58,7 @@
 				662F28D92C62124400106ADE /* TOCropViewController in Frameworks */,
 				66DC52D62CD47C1E003F5A33 /* Kingfisher in Frameworks */,
 				662F28D72C62124400106ADE /* CropViewController in Frameworks */,
+				668DB1762CD8D36D00BD83C8 /* FirebaseFirestoreSwift in Frameworks */,
 				6611D3C42C2ABB4600650D01 /* FirebaseAuth in Frameworks */,
 				66032B222C0DBA8A00517F96 /* IQKeyboardManagerSwift in Frameworks */,
 				66DCB9A22C2A8879000C7736 /* GoogleSignIn in Frameworks */,
@@ -157,6 +159,7 @@
 				662F28D82C62124400106ADE /* TOCropViewController */,
 				660A671C2CA0EE190015BA1A /* SDWebImageSwiftUI */,
 				66DC52D52CD47C1E003F5A33 /* Kingfisher */,
+				668DB1752CD8D36D00BD83C8 /* FirebaseFirestoreSwift */,
 			);
 			productName = Connected;
 			productReference = 66282FFE2BC35B0B0010EFAD /* Connected.app */;
@@ -538,6 +541,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 662B85A72C02F19B008F14E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		668DB1752CD8D36D00BD83C8 /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 662B85A72C02F19B008F14E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
 		};
 		66DC52D52CD47C1E003F5A33 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

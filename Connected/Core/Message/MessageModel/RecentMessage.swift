@@ -7,18 +7,16 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 
-struct RecentMessage: Identifiable, Decodable {
+struct RecentMessage: Identifiable, Decodable{
     @DocumentID var id: String?
     let text: String
     let fromId: String
     let toId: String
-    let email: String
-    let profileImageUrl: String
-    let name: String
     let timestamp: Timestamp
+    let user: User
 
     var timeAgo: String {
         let date = timestamp.dateValue()
@@ -31,10 +29,9 @@ struct RecentMessage: Identifiable, Decodable {
         case text
         case fromId
         case toId
-        case email
-        case profileImageUrl = "profile_image" // Map to Firestore key
-        case name = "Name"                     // Map to Firestore key
         case timestamp
+        case user
     }
+    
 }
 

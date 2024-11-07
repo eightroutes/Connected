@@ -26,6 +26,10 @@ class ProfileDetailViewModel: ObservableObject {
         let docRef = db.collection("users").document(userId)
         docRef.getDocument { [weak self] (document, error) in
             guard let self = self else { return }
+            if let error = error {
+                print("Failed to fetch user profile: \(error)")
+                return
+            }
             if let document = document, document.exists {
                 let data = document.data()
                 self.userName = data?["Name"] as? String ?? "Unknown"

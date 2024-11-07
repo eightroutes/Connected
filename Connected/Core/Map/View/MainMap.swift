@@ -6,12 +6,13 @@ import CoreLocation
 struct MainMap: View {
     @StateObject private var firestoreManager = FirestoreManager()
     @StateObject private var locationManager = LocationManager()
-//    @StateObject private var mainMapViewModel = MainMapViewModel()
+    @StateObject private var mainMapViewModel = MainMapViewModel()
     
     @State private var showProfileDetail = false
     @State private var selectedUser: User?
 
     @State private var cameraPosition: MapCameraPosition = .userLocation(fallback: .automatic) // 초기 설정
+    
     
     var body: some View {
         Map(position: $cameraPosition, interactionModes: .all) {
@@ -30,7 +31,6 @@ struct MainMap: View {
         .navigationBarHidden(true)
         .mapControls {
             MapUserLocationButton()
-            
             MapPitchToggle()
         }
         .navigationDestination(isPresented: $showProfileDetail) {
@@ -43,7 +43,7 @@ struct MainMap: View {
             if let userId = Auth.auth().currentUser?.uid {
                 firestoreManager.currentUserId = userId
             }
-            locationManager.requestLocation()
+//            locationManager.requestLocation()
             firestoreManager.fetchUserLocations()
         }
         .onChange(of: locationManager.location) { newLocation in

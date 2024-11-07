@@ -66,11 +66,13 @@ struct SettingsAndInfo: View {
         }
         .navigationDestination(isPresented: $shouldNavigateToSignIn) {
             LoginView()
+                .navigationBarHidden(true)
         }
     }
     func signOut() {
         do {
             try Auth.auth().signOut()
+            AuthService.shared.userSession = nil
             DispatchQueue.main.async {
                 self.shouldNavigateToSignIn = true // 로그인 화면으로 이동
             }

@@ -8,6 +8,7 @@ struct EmailRegisterView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var showAlert = false
+    @State private var errorMessage = ""
     
     fileprivate func Line() -> some View {
         return Rectangle()
@@ -53,7 +54,7 @@ struct EmailRegisterView: View {
                             try await viewModel.createUser()
                             showAlert = true
                         } catch {
-                            print("Error: \(error.localizedDescription)")
+                            errorMessage = ("Error: \(error.localizedDescription)")
                         }
                     }
                 }) {
@@ -70,9 +71,19 @@ struct EmailRegisterView: View {
                         dismiss()
                     })
                 }
-                
-                
                 Spacer()
+                // 오류메시지
+              Text(errorMessage)
+                  .foregroundColor(.red)
+                  .font(.footnote)
+                  .padding(.top, 5)
+                  .onAppear {
+                      // 3초 후 errorMessage를 자동으로 사라지게 함
+                      DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                          errorMessage = ""
+                      }
+                  }
+                
             }
             .padding()
         }//NavigationStack

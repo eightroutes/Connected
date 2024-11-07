@@ -24,7 +24,7 @@ struct MainView: View {
                     case 2:
                         ConnectFriends()
                     case 3:
-                        MainMessagesView()
+                        MainMessagesView(user: user)
                     default:
                         SettingsAndInfo(currentUser: user)
                     }

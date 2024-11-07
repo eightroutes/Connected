@@ -14,7 +14,7 @@ class AuthService: ObservableObject {
     static let shared = AuthService() // 싱글톤 인스턴스
     
     init() {
-//        Task { try await loadUserData() }
+        Task { try await loadUserData() }
     }
     
     @MainActor

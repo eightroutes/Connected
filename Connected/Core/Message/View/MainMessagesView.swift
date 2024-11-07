@@ -1,114 +1,106 @@
 import SwiftUI
 import Firebase
 import Kingfisher
-import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 struct MainMessagesView: View {
+    let user: User
+    @ObservedObject var vm: MainMessagesViewModel
+    
+    init(user: User) {
+        self.user = user
+        self.vm = MainMessagesViewModel(user: user)
+    }
+    
     @State var shouldShowLogOutOptions = false
-    @ObservedObject private var vm = MainMessagesViewModel()
-    @State private var selectedChatUser: ChatUser?
+    @State private var selectedProfileUser: User?
     @State private var shouldNavigateToChatLogView = false
+    @State private var shouldNavigateToProfileDetail = false
+    
+
 
     var body: some View {
         NavigationStack {
             VStack {
-                customNavBar
                 messagesView
             }
-            .navigationBarHidden(true)
+            .navigationTitle("메시지")
+            .navigationBarTitleDisplayMode(.large)
             .navigationDestination(isPresented: $shouldNavigateToChatLogView) {
-                if let chatUser = selectedChatUser {
-                    ChatLogView(chatUser: chatUser)
+                if let user = selectedProfileUser {
+                    ChatLogView(user: user)
+                }
+            }
+            .navigationDestination(isPresented: $shouldNavigateToProfileDetail) {
+                if let user = selectedProfileUser {
+                    ProfileDetail(user: user)
                 }
             }
         }
-    }
-
-    private var customNavBar: some View {
-        HStack(spacing: 16) {
-            // Use vm.chatUser instead of currentUser
-            KFImage(URL(string: vm.chatUser?.profileImageUrl ?? ""))
-                .resizable()
-                .scaledToFill()
-                .frame(width: 50, height: 50)
-                .clipped()
-                .cornerRadius(50)
-                .overlay(RoundedRectangle(cornerRadius: 44)
-                            .stroke(Color(.label), lineWidth: 1))
-                .shadow(radius: 5)
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(vm.chatUser?.name ?? "UserName")
-                    .font(.system(size: 24, weight: .bold))
-
-                HStack {
-                    Circle()
-                        .foregroundColor(.green)
-                        .frame(width: 14, height: 14)
-                    Text("online")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color(.lightGray))
-                }
-            }
-
-            Spacer()
-        }
-        .padding()
     }
 
     private var messagesView: some View {
         ScrollView {
+            Spacer()
+                .frame(height: 8)
             ForEach(vm.recentMessages) { recentMessage in
                 VStack {
-                    Button {
-                        let id = recentMessage.toId == Auth.auth().currentUser?.uid ? recentMessage.fromId : recentMessage.toId
-                        let data = [
-                            "id": id,
-                            "email": recentMessage.email,
-                            "profile_image": recentMessage.profileImageUrl,
-                            "Name": recentMessage.name
-                        ]
-                        self.selectedChatUser = ChatUser(data: data)
-                        self.shouldNavigateToChatLogView = true
-                    } label: {
-                        Spacer()
-                            .frame(height: 8)
-                        HStack(spacing: 16) {
-                            KFImage(URL(string: recentMessage.profileImageUrl))
+                    HStack(spacing: 16) {
+                        // 프로필 이미지 버튼
+                        Button {
+                            self.selectedProfileUser = recentMessage.user
+                            self.shouldNavigateToProfileDetail = true
+                        } label: {
+                            KFImage(URL(string: recentMessage.user.profileImageUrl ?? ""))
+                                .onSuccess { _ in
+                                    print("Loaded image for message from \(recentMessage.user.name ?? "")")
+                                }
+                                .onFailure { error in
+                                    print("Failed to load image: \(error.localizedDescription)")
+                                }
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 40, height: 40)
                                 .clipped()
                                 .cornerRadius(50)
-                                .overlay(Circle()
-                                            .stroke(Color(.label), lineWidth: 1))
-
-                            VStack(alignment: .leading) {
-                                Text(recentMessage.name)
-                                    .font(.system(size: 16, weight: .bold))
-                                Text(recentMessage.text)
-                                    .font(.system(size: 14))
-                                    .lineLimit(1)
-                            }
-
-                            Spacer()
-
-                            Text(recentMessage.timeAgo)
-                                .foregroundColor(Color(.lightGray))
-                                .font(.system(size: 14, weight: .semibold))
+                                .overlay(Circle().stroke(Color(.label), lineWidth: 1))
                         }
-                        .padding(.horizontal)
-                    }
-
+                        
+                        VStack(alignment: .leading) {
+                            // 메시지 내용 및 채팅 화면으로 이동
+                            Button {
+                                self.selectedProfileUser = recentMessage.user
+                                self.shouldNavigateToChatLogView = true
+                                print("Navigating to ChatLogView with user: \(self.selectedProfileUser?.name ?? "No Name")")
+                            } label: {
+                                VStack(alignment: .leading){
+                                    Text(recentMessage.user.name ?? "UserName")
+                                        .font(.system(size: 16, weight: .bold))
+                                        .lineLimit(1)
+                                    Text(recentMessage.text)
+                                        .font(.system(size: 14))
+                                        .lineLimit(1)
+                                }
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        Text(recentMessage.timeAgo)
+                            .foregroundColor(Color(.lightGray))
+                            .font(.system(size: 14, weight: .semibold))
+                    } // HStack
+                    .padding(.horizontal)
+                    
                     Divider()
                         .padding(.vertical, 8)
-                }
+                } // VStack
             }
-            .padding(.bottom, 50)
+//            .padding(.bottom, 50)
         }
     }
 }
 
 #Preview {
-    MainMessagesView()
+    MainMessagesView(user: User(id: "FlqH2Rcg74a3p6ZsvHGEbyFJorz2", name: "Test User", profileImageUrl: "https://i.pravatar.cc/300", email: "rmsgh1188@gmail.com"))
 }

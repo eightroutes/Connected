@@ -29,7 +29,6 @@ struct ContentView: View {
                         .environmentObject(registrationViewModel)
                         .environmentObject(loginViewModel)
                 } else if let currentUser = authService.currentUser {
-
                     if hasImages {
                         MainView(user: currentUser)
                     } else {

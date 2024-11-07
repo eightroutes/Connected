@@ -25,19 +25,21 @@ struct User: Identifiable, Codable, Hashable  {
     var email: String?
     var age: Int?
     var birthday: String?
-
+    
     
     var isCurrentUser: Bool {
         guard let currentUid = Auth.auth().currentUser?.uid else { return false }
         return currentUid == id
-        
+    }
+    var hasCompletedProfile: Bool {
+        return !(otherImagesUrl?.isEmpty ?? false) && otherImagesUrl != nil
     }
     
 
 }
 
 enum CodingKeys: String, CodingKey {
-        case id
+        case id = "id"
         case name = "Name"
         case email = "email"
         case profileImageUrl = "profile_image"
@@ -47,7 +49,7 @@ enum CodingKeys: String, CodingKey {
         case musicGenres = "Music"
         case movieGenres = "Movie"
         case birthday = "Birthday"
-        case otherImageUrl = "other_images"
+        case otherImagesUrl = "other_images"
         case latitude = "latitude"
         case longitude = "longitude"
     

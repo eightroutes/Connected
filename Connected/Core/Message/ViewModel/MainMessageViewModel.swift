@@ -1,5 +1,5 @@
 //
-//  MainMessageViewModel.swift
+//  MainMessagesViewModel.swift
 //  Connected
 //
 //  Created by 정근호 on 11/4/24.
@@ -7,39 +7,36 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 class MainMessagesViewModel: ObservableObject {
     @Published var errorMessage = ""
-    @Published var chatUser: ChatUser?
     @Published var recentMessages = [RecentMessage]()
+    
+    var user: User?
+
     
     private var firestoreListener: ListenerRegistration?
     private var firestoreManager = FirestoreManager()
     
-    
-    init() {
+    init(user: User?) {
+        self.user = user
+        
         fetchCurrentUser()
         fetchRecentMessages()
-        
     }
     
     private func fetchCurrentUser() {
         firestoreManager.fetchCurrentUser { user in
             DispatchQueue.main.async {
                 if let user = user {
-                    DispatchQueue.main.async {
-                        self.chatUser = ChatUser(user: user)
-                    }
+                    self.user = user
                 } else {
-                    DispatchQueue.main.async {
-                        self.errorMessage = "Failed to fetch current user"
-                    }
+                    self.errorMessage = "Failed to fetch current user"
                 }
             }
         }
     }
-    
     
     func fetchRecentMessages() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -61,8 +58,15 @@ class MainMessagesViewModel: ObservableObject {
                     return
                 }
                 
-                let messages = querySnapshot?.documents.compactMap { document in
-                    try? document.data(as: RecentMessage.self)
+                let messages = querySnapshot?.documents.compactMap { document -> RecentMessage? in
+                    do {
+                        let message = try document.data(as: RecentMessage.self)
+                        print("Decoded RecentMessage: \(message)")
+                        return message
+                    } catch {
+                        print("Failed to decode RecentMessage: \(error)")
+                        return nil
+                    }
                 } ?? []
                 
                 DispatchQueue.main.async {
@@ -70,6 +74,4 @@ class MainMessagesViewModel: ObservableObject {
                 }
             }
     }
-    
-    
 }

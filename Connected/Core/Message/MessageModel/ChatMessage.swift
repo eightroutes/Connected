@@ -1,6 +1,6 @@
 import Foundation
 import Firebase
-import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 struct ChatMessage: Codable, Identifiable {
     

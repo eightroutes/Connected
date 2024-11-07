@@ -57,7 +57,14 @@ struct LoginView: View {
                       .foregroundColor(.red)
                       .font(.footnote)
                       .padding(.top, 5)
+                      .onAppear {
+                          // 3초 후 errorMessage를 자동으로 사라지게 함
+                          DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                              viewModel.errorMessage = nil
+                          }
+                      }
                 }
+                
                 
                 HStack {
                     Rectangle()

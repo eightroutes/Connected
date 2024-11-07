@@ -8,15 +8,16 @@ struct ProfileDetail: View {
     @StateObject private var viewModel = ProfileDetailViewModel()
     
     @State private var selectedImageIndex = 0
-    @State private var navigationPath = NavigationPath()
     @State private var showMessageView = false
-    @State private var selectedChatUser: ChatUser?
-
     
     let user: User
     
+    // 현재 유저의 UID를 가져옴
+    private var currentUserId: String? {
+        Auth.auth().currentUser?.uid
+    }
+    
     var body: some View {
-        NavigationStack {
             ZStack{
                 VStack {
                     // Swipeable Image Gallery
@@ -35,7 +36,6 @@ struct ProfileDetail: View {
                     
                     ScrollView {
                         VStack(alignment: .leading, spacing: 20) {
-                            // Profile Photo and Name
                             HStack(spacing: 20) {
                                 // 프로필 이미지
 //                                if let profileImageUrl = viewModel.profileImageUrl {
@@ -74,27 +74,26 @@ struct ProfileDetail: View {
                                         .foregroundColor(.pink)
                                         .font(.title3)
                                 }
-                                Spacer()
-                                Button(action: {
+                                
+                                if user.id != currentUserId {
+                                    Spacer()
                                     
-                                }) {
-                                    Image(systemName: "person.badge.plus")
-                                        .font(.title3)
-                                }
-                                Button(action: {
-                                    selectedChatUser = ChatUser(user: user)
-                                    showMessageView = true
-                                    
-                                }) {
-                                    Image(systemName: "plus.message")
-                                        .font(.title3)
-                                }
-                                .navigationDestination(isPresented: $showMessageView){
-                                    if let chatUser = selectedChatUser {
-                                        ChatLogView(chatUser: chatUser)
-                                    } else {
-                                        Text("No chat user selected")
+                                    // 친구추가 버튼
+                                    Button(action: {
+                                        
+                                    }) {
+                                        Image(systemName: "person.badge.plus")
+                                            .font(.title3)
                                     }
+                                    
+                                    // 메시지 버튼
+                                    Button(action: {
+                                        showMessageView = true
+                                    }) {
+                                        Image(systemName: "plus.message")
+                                            .font(.title3)
+                                    }
+
                                 }
                         
                             }
@@ -115,9 +114,10 @@ struct ProfileDetail: View {
                 .onAppear {
                     viewModel.fetchUserProfile(for: user.id) // 전달받은 UID로 프로필 데이터 불러오기
                 }
+                .navigationDestination(isPresented: $showMessageView){
+                   ChatLogView(user: user)
+               }
             }
-        }
-        .tint(.brand)
     }
     
     func tagView(title: String, items: [String]) -> some View {
@@ -155,10 +155,11 @@ struct ProfileDetail: View {
 }
     
 
-
 #Preview {
     ProfileDetail(user: User.MOCK_USERS[0])
 }
+
+
 
 struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: Hashable {
     let data: Data

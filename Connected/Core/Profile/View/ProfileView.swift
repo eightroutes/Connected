@@ -37,7 +37,6 @@ struct ProfileView: View {
                     .zIndex(1.0)
                 }
             }
-            
             .onAppear {
                 viewModel.fetchUserProfile(for: user.id)
             }

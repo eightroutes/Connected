@@ -1,188 +1,161 @@
-
 import SwiftUI
 import FirebaseAuth
-import FirebaseFirestore
-
+import FirebaseFirestoreSwift
 
 struct FirebaseConstants {
     static let timestamp = "timestamp"
     static let fromId = "fromId"
     static let toId = "toId"
     static let text = "text"
-    static let profileImageUrl = "profile_image"
+    static let profileImageUrl = "profile_image" // Firestore의 필드 이름에 맞춤
     static let email = "email"
     static let uid = "id"
     static let name = "Name"
 }
 
-
 struct ChatLogView: View {
-    
-    let chatUser: ChatUser
+    let user: User
     @ObservedObject var vm: ChatLogViewModel
-    
-    init(chatUser: ChatUser) {
-        self.chatUser = chatUser
-        self.vm = ChatLogViewModel(chatUser: chatUser)
-    }
-    
-    @State private var dynamicHeight: CGFloat = 16 // 초기 높이 설정
 
-    
-    
-    var body: some View {
-        
-        VStack {
-            
-            messagesView
-            Text(vm.errorMessage)
-            
-            chatBottomBar
-            
-        }
-        .navigationTitle(chatUser.name)
-        .navigationBarTitleDisplayMode(.inline)
-        .onDisappear {
-            vm.firestoreListner?.remove()
-        }
-//        .navigationBarItems(trailing: Button(action: {
-//            vm.count += 1
-//        }, label: {
-//            Text("Count: \(vm.count)")
-//        }))
+    init(user: User) {
+        self.user = user
+        self.vm = ChatLogViewModel(user: user)
     }
-    
+
+    @State private var dynamicHeight: CGFloat = 32 // Initial height
+
+    var body: some View {
+        VStack {
+            messagesView
+            if !vm.errorMessage.isEmpty {
+                Text(vm.errorMessage)
+                    .foregroundColor(.red)
+            }
+            chatBottomBar
+        }
+        .navigationTitle(user.name ?? "")
+        .navigationBarTitleDisplayMode(.large)
+        .onDisappear {
+            vm.firestoreListener?.remove()
+        }
+    }
+
     static let emptyScrollToString = "Empty"
-    
+
     private var messagesView: some View {
         ScrollView {
             ScrollViewReader { scrollViewProxy in
-                
                 VStack {
                     ForEach(vm.chatMessages) { message in
                         MessageView(message: message)
                     }
-                    
-                    HStack{ Spacer() }
+                    HStack { Spacer() }
                         .id(Self.emptyScrollToString)
                 }
-                // 하단으로 스크롤
                 .onReceive(vm.$count) { _ in
                     withAnimation(.easeOut(duration: 0.5)) {
                         scrollViewProxy.scrollTo(Self.emptyScrollToString, anchor: .bottom)
                     }
                 }
-
             }
-            
         }
-        .background(Color(.init(white: 0.95, alpha: 1)))
+        .background(Color(.systemGray6))
+        .ignoresSafeArea(.keyboard)
     }
-    
-    
+
     private var chatBottomBar: some View {
+        HStack(alignment: .bottom, spacing: 18) {
+            Button(action: {
+                // 사진 선택 액션
+            }) {
+                Image(systemName: "photo.on.rectangle")
+                    .font(.system(size: 24))
+                    .foregroundColor(Color(.darkGray))
+            }
 
-        HStack(alignment:.bottom ,spacing: 16) {
-            Image(systemName: "photo.on.rectangle")
-                .font(.system(size: 24))
-                .foregroundColor(Color(.darkGray))
-
-            TextEditor(text: $vm.chatText)
-                .frame(minHeight: dynamicHeight, maxHeight: dynamicHeight) // Set dynamic height
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .onChange(of: vm.chatText) { _ in
-                    adjustHeight()
+            ZStack {
+                if vm.chatText.isEmpty {
+                    Text("Message...")
+                        .foregroundColor(.gray)
+                        .padding(.leading, 5)
+                        .padding(.top, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-            
-//            DescriptionPlaceholder()
-//            TextEditor(text: $vm.chatText)
-//                .opacity(vm.chatText.isEmpty ? 0.5: 1)
-                
-//            TextField("Description", text: $vm.chatText)
-//                .opacity(vm.chatText.isEmpty ? 0.5: 1)
-            Button {
-                if vm.chatText != "" {
+
+                TextEditor(text: $vm.chatText)
+                    .frame(minHeight: dynamicHeight, maxHeight: dynamicHeight)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                    .onChange(of: vm.chatText) { _ in
+                        adjustHeight()
+                    }
+            }
+            .frame(height: dynamicHeight)
+
+            Button(action: {
+                if !vm.chatText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     vm.handleSend(text: vm.chatText)
+                    vm.chatText = ""
+                    dynamicHeight = 32 // Reset height
                 }
-            } label: {
+            }) {
                 Text("Send")
                     .foregroundColor(.white)
             }
             .padding(.horizontal)
             .padding(.vertical, 8)
-            .background(vm.chatText.isEmpty ? Color.gray: Color.blue)
+            .background(vm.chatText.isEmpty ? Color.gray : Color.brand)
             .cornerRadius(4)
+            .disabled(vm.chatText.isEmpty)
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
     }
-    
+
     private func adjustHeight() {
-            let fixedWidth = UIScreen.main.bounds.width - 110 // Width of the HStack minus paddings
-            let size = CGSize(width: fixedWidth, height: .infinity)
-            let estimatedSize = vm.chatText.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 17)], context: nil)
-            let newHeight = max(20, min(estimatedSize.height + 20, 120)) // Set a maximum height limit of 120
-            dynamicHeight = newHeight
-        }
+        let maxHeight: CGFloat = 120
+        let minHeight: CGFloat = 32
+
+        let textView = UITextView()
+        textView.text = vm.chatText
+        textView.font = UIFont.systemFont(ofSize: 17)
+        let size = textView.sizeThatFits(CGSize(width: UIScreen.main.bounds.width - 110, height: .infinity))
+        dynamicHeight = min(max(size.height, minHeight), maxHeight)
+    }
 }
 
 struct MessageView: View {
-    
     let message: ChatMessage
-    
+
     var body: some View {
-        NavigationStack {
-            VStack {
-                if message.fromId == Auth.auth().currentUser?.uid {
-                    HStack {
-                        Spacer()
-                        HStack {
-                            Text(message.text)
-                                .foregroundColor(.white)
-                            
-                        }
+        VStack {
+            if message.fromId == Auth.auth().currentUser?.uid {
+                HStack {
+                    Spacer()
+                    Text(message.text)
                         .padding()
-                        .background(Color.blue)
+                        .background(Color.brand)
+                        .foregroundColor(.white)
                         .cornerRadius(8)
-                    }
-                    
-                } else {
-                    HStack {
-                        HStack {
-                            Text(message.text)
-                                .foregroundColor(.black)
-                            
-                        }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(8)
-                        Spacer()
-                    }
                 }
-            }//VStack
-            .padding(.horizontal)
-            .padding(.top, 8)
+            } else {
+                HStack {
+                    Text(message.text)
+                        .padding()
+                        .background(Color(.systemGray5))
+                        .foregroundColor(.black)
+                        .cornerRadius(8)
+                    Spacer()
+                }
+            }
         }
+        .padding(.horizontal)
+        .padding(.top, 8)
     }
 }
 
-//private struct DescriptionPlaceholder: View {
-//    var body: some View {
-//        HStack {
-//            Text("Description")
-//                .foregroundColor(.gray)
-//                .font(.system(size: 17))
-//                .padding(.leading, 5)
-//                .padding(.top, -4)
-//            Spacer()
-//        }
-//    }
-//}
 
-#Preview() {
-    NavigationView {
-        ChatLogView(chatUser: ChatUser(data: ["uid":"FlqH2Rcg74a3p6ZsvHGEbyFJorz2", "email":"rmsgh1188@gmail.com"]))
-    }
-   
+
+#Preview {
+    ChatLogView(user: User(id: "FlqH2Rcg74a3p6ZsvHGEbyFJorz2", name: "Test User", profileImageUrl: "https://i.pravatar.cc/300", email: "rmsgh1188@gmail.com"))
 }
