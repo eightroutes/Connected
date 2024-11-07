@@ -4,21 +4,20 @@ import Kingfisher
 import FirebaseFirestoreSwift
 
 struct MainMessagesView: View {
-    let user: User
     @ObservedObject var vm: MainMessagesViewModel
     
-    init(user: User) {
-        self.user = user
-        self.vm = MainMessagesViewModel(user: user)
-    }
+    
     
     @State var shouldShowLogOutOptions = false
     @State private var selectedProfileUser: User?
     @State private var shouldNavigateToChatLogView = false
     @State private var shouldNavigateToProfileDetail = false
     
-
-
+    init(user: User) {
+        self.vm = MainMessagesViewModel()
+    }
+    
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -38,22 +37,21 @@ struct MainMessagesView: View {
             }
         }
     }
-
+    
     private var messagesView: some View {
         ScrollView {
             Spacer()
                 .frame(height: 8)
-            ForEach(vm.recentMessages) { recentMessage in
+            ForEach(vm.recentMessages) { recentMessage  in
                 VStack {
                     HStack(spacing: 16) {
                         // 프로필 이미지 버튼
                         Button {
-                            self.selectedProfileUser = recentMessage.user
                             self.shouldNavigateToProfileDetail = true
                         } label: {
-                            KFImage(URL(string: recentMessage.user.profileImageUrl ?? ""))
+                            KFImage(URL(string: recentMessage.user.profile_image))
                                 .onSuccess { _ in
-                                    print("Loaded image for message from \(recentMessage.user.name ?? "")")
+                                    print("Loaded image for message from \(recentMessage.user.name)")
                                 }
                                 .onFailure { error in
                                     print("Failed to load image: \(error.localizedDescription)")
@@ -69,12 +67,12 @@ struct MainMessagesView: View {
                         VStack(alignment: .leading) {
                             // 메시지 내용 및 채팅 화면으로 이동
                             Button {
-                                self.selectedProfileUser = recentMessage.user
+                                self.selectedProfileUser = convertToUser(userBrief: recentMessage.user)
                                 self.shouldNavigateToChatLogView = true
                                 print("Navigating to ChatLogView with user: \(self.selectedProfileUser?.name ?? "No Name")")
                             } label: {
                                 VStack(alignment: .leading){
-                                    Text(recentMessage.user.name ?? "UserName")
+                                    Text(recentMessage.user.name)
                                         .font(.system(size: 16, weight: .bold))
                                         .lineLimit(1)
                                     Text(recentMessage.text)
@@ -86,7 +84,7 @@ struct MainMessagesView: View {
                         
                         Spacer()
                         
-                        Text(recentMessage.timeAgo)
+                        Text(timeAgo(from: recentMessage.timestamp))
                             .foregroundColor(Color(.lightGray))
                             .font(.system(size: 14, weight: .semibold))
                     } // HStack
@@ -94,12 +92,50 @@ struct MainMessagesView: View {
                     
                     Divider()
                         .padding(.vertical, 8)
-                } // VStack
+                }// VStack
+                .onAppear(){
+                    self.selectedProfileUser = convertToUser(userBrief: recentMessage.user)
+                }
             }
-//            .padding(.bottom, 50)
         }
+        
+    }
+    
+    // Helper method to convert UserBrief to User
+    private func convertToUser(userBrief: RecentMessage.UserBrief) -> User? {
+        // Firestore에서 User 데이터를 가져와야 합니다.
+        // 또는, 이미 모든 필드가 저장되어 있으므로 UserBrief와 User를 통합할 수 있습니다.
+        // 여기서는 UserBrief를 기반으로 User를 생성하는 예시를 제공합니다.
+        // 실제 애플리케이션에서는 추가적인 데이터 조회가 필요할 수 있습니다.
+        
+        // 예시: UserBrief와 User가 동일한 필드를 가진 경우
+        return User(
+            id: userBrief.id,
+            name: userBrief.name,
+            gender: nil,
+            interests: nil,
+            selectedColor: nil,
+            selectedMBTI: nil,
+            musicGenres: nil,
+            movieGenres: nil,
+            profileImageUrl: userBrief.profile_image,
+            otherImagesUrl: nil,
+            latitude: nil,
+            longitude: nil,
+            email: userBrief.email,
+            age: nil,
+            birthday: nil
+        )
+    }
+    
+    // Helper method to format timestamp
+    private func timeAgo(from date: Date) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .short
+        return formatter.localizedString(for: date, relativeTo: Date())
     }
 }
+
 
 #Preview {
     MainMessagesView(user: User(id: "FlqH2Rcg74a3p6ZsvHGEbyFJorz2", name: "Test User", profileImageUrl: "https://i.pravatar.cc/300", email: "rmsgh1188@gmail.com"))

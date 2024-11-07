@@ -35,25 +35,26 @@ struct User: Identifiable, Codable, Hashable  {
         return !(otherImagesUrl?.isEmpty ?? false) && otherImagesUrl != nil
     }
     
+    enum CodingKeys: String, CodingKey {
+            case id
+            case name = "Name"
+            case email
+            case profileImageUrl = "profile_image"
+            case selectedMBTI
+            case selectedColor
+            case interests
+            case musicGenres
+            case movieGenres
+            case birthday
+            case otherImagesUrl = "other_images"
+            case latitude
+            case longitude 
+        
+    }
 
 }
 
-enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case name = "Name"
-        case email = "email"
-        case profileImageUrl = "profile_image"
-        case selectedMBTI = "MBTI"
-        case selectedColor = "Color"
-        case interests = "Interests"
-        case musicGenres = "Music"
-        case movieGenres = "Movie"
-        case birthday = "Birthday"
-        case otherImagesUrl = "other_images"
-        case latitude = "latitude"
-        case longitude = "longitude"
-    
-}
+
 
 
 // 가짜 유저 목록

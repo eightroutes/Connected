@@ -8,7 +8,7 @@ class ChatLogViewModel: ObservableObject {
     @Published var chatText = ""
     @Published var errorMessage = ""
     @Published var chatMessages = [ChatMessage]()
-    @Published var count = 0  // count 변수를 선언하여 에러 방지
+    @Published var count = 0
     
     var user: User?
     
@@ -42,6 +42,30 @@ class ChatLogViewModel: ObservableObject {
     
     var firestoreListener: ListenerRegistration?
     
+    // 특정 사용자(ID 기준) 정보 가져오기
+    func fetchUser(by id: String, completion: @escaping (User?) -> Void) {
+        Firestore.firestore().collection("users").document(id).getDocument { snapshot, error in
+            if let error = error {
+                print("Error fetching user with id \(id): \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            if let snapshot = snapshot, snapshot.exists {
+                do {
+                    let user = try snapshot.data(as: User.self)
+                    completion(user)
+                } catch {
+                    print("Error decoding user with id \(id): \(error.localizedDescription)")
+                    completion(nil)
+                }
+            } else {
+                print("User document with id \(id) does not exist")
+                completion(nil)
+            }
+        }
+    }
+    
     func fetchMessages() {
         guard let fromId = Auth.auth().currentUser?.uid else { return }
         guard let toId = user?.id else { return }
@@ -51,7 +75,7 @@ class ChatLogViewModel: ObservableObject {
             .collection("messages")
             .document(fromId)
             .collection(toId)
-            .order(by: FirebaseConstants.timestamp)
+            .order(by: FirebaseConstants.timestamp, descending: false)
             .addSnapshotListener { querySnapshot, error in
                 if let error = error {
                     self.errorMessage = "Failed to listen for messages: \(error)"
@@ -77,6 +101,7 @@ class ChatLogViewModel: ObservableObject {
                 }
             }
     }
+    
     func handleSend(text: String) {
         guard let fromId = Auth.auth().currentUser?.uid else { return }
         guard let toId = user?.id else { return }
@@ -127,36 +152,51 @@ class ChatLogViewModel: ObservableObject {
     private func persistRecentMessage(text: String, toId: String) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         guard let user = user else { return }
-
-        // 현재 유저의 최근 메시지 데이터 (상대방의 정보를 포함)
-        let recentMessageData: [String: Any] = [
-            "text": text,
-            "fromId": uid,
-            "toId": toId,
-            "timestamp": Timestamp(),
-            "user": [
-                "id": user.id,
-                "Name": user.name ?? "",
-                "email": user.email ?? "",
-                "profile_image": user.profileImageUrl ?? ""
-            ]
-        ]
-
-        // 현재 유저의 recent_messages에 저장
-        Firestore.firestore()
-            .collection("recent_messages")
-            .document(uid)
-            .collection("messages")
-            .document(toId)
-            .setData(recentMessageData) { error in
-                if let error = error {
-                    print("Failed to save recent message: \(error)")
-                    return
-                }
-                print("Successfully saved recent message for current user")
-            }
         
-        // 상대방의 최근 메시지 데이터 (현재 유저의 정보를 포함)
+        // 1. 상대방의 사용자 정보 가져오기 (비동기)
+        // 상대방의 사용자 정보 로드
+        fetchUser(by: toId) { [weak self] recipientUser in
+            guard let self = self else { return }
+            guard let recipient = recipientUser else {
+                print("Failed to fetch recipient user.")
+                return
+            }
+            
+            // 2. 데이터 저장 로직 (클로저 내부에서 실행)
+            // 현재 유저의 최근 메시지 데이터 (상대방의 정보를 포함)
+            let recentMessageData: [String: Any] = [
+                "text": text,
+                "fromId": uid,
+                "toId": toId,
+                "timestamp": Timestamp(),
+                "user": [
+                    "id": recipient.id,
+                    "Name": recipient.name,
+                    "email": recipient.email ?? "",
+                    "profile_image": recipient.profileImageUrl ?? ""
+                ]
+            ]
+            
+            print("*Saving recentMessageData for current user: \(recentMessageData)*") // 디버깅 로그
+            
+            // 3. Firestore에 데이터 저장
+            // 현재 유저의 recent_messages에 저장, fetchUser로 정보를 먼저 가져온 후 저장
+            Firestore.firestore()
+                .collection("recent_messages")
+                .document(uid)
+                .collection("messages")
+                .document(toId)
+                .setData(recentMessageData) { error in
+                    if let error = error {
+                        print("Failed to save recent message: \(error)")
+                        return
+                    }
+                    print("Successfully saved recent message for current user")
+                }
+        }//fetchUser
+        
+        // 4. 상대방의 recent_messages에 데이터 저장 (클로저 외부에서 즉시 실행)
+        // 현재 사용자의 정보는 이미 로드되어 있으므로, 상대방의 recent_messages에 저장
         let recipientRecentMessageData: [String: Any] = [
             "text": text,
             "fromId": uid,
@@ -169,7 +209,9 @@ class ChatLogViewModel: ObservableObject {
                 "profile_image": self.currentUserProfileImageUrl
             ]
         ]
-
+        
+        print("*Saving recipientRecentMessageData: \(recipientRecentMessageData)*") // 디버깅 로그
+        
         // 상대방의 recent_messages에 저장
         Firestore.firestore()
             .collection("recent_messages")
@@ -183,7 +225,6 @@ class ChatLogViewModel: ObservableObject {
                 }
                 print("Successfully saved recent message for recipient")
             }
-
     }
 
 }

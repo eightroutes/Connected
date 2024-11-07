@@ -13,15 +13,12 @@ class MainMessagesViewModel: ObservableObject {
     @Published var errorMessage = ""
     @Published var recentMessages = [RecentMessage]()
     
-    var user: User?
 
     
     private var firestoreListener: ListenerRegistration?
     private var firestoreManager = FirestoreManager()
     
-    init(user: User?) {
-        self.user = user
-        
+    init() {
         fetchCurrentUser()
         fetchRecentMessages()
     }
@@ -29,9 +26,7 @@ class MainMessagesViewModel: ObservableObject {
     private func fetchCurrentUser() {
         firestoreManager.fetchCurrentUser { user in
             DispatchQueue.main.async {
-                if let user = user {
-                    self.user = user
-                } else {
+                if user == nil {
                     self.errorMessage = "Failed to fetch current user"
                 }
             }
@@ -39,14 +34,14 @@ class MainMessagesViewModel: ObservableObject {
     }
     
     func fetchRecentMessages() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let userId = Auth.auth().currentUser?.uid else { return }
         
         firestoreListener?.remove()
         recentMessages.removeAll()
         
         firestoreListener = Firestore.firestore()
             .collection("recent_messages")
-            .document(uid)
+            .document(userId)
             .collection("messages")
             .order(by: "timestamp", descending: true)
             .addSnapshotListener { querySnapshot, error in
