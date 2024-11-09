@@ -34,7 +34,7 @@ struct ChatLogView: View {
             chatBottomBar
         }
         .navigationTitle(user.name ?? "")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(.inline)
         .onDisappear {
             vm.firestoreListener?.remove()
         }

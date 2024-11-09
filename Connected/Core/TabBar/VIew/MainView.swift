@@ -17,7 +17,7 @@ struct MainView: View {
                            MainMap()
                            ProfileView(user: user)
                                .padding(.leading, 20)
-                               .padding(.top, 20)
+                               .padding(.top, 10)
                        }
                     case 1:
                         FeedView()

@@ -4,8 +4,8 @@ import FirebaseAuth
 
 class ProfileDetailViewModel: ObservableObject {
     private var imageCounts = 6
+    
     @Published var isSignedIn = false
-
     @Published var userImagesUrl: [String] = [] // URLs for user images
     @Published var profileImageUrl: String?
     @Published var userName: String = "이름"

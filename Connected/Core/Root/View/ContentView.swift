@@ -36,7 +36,10 @@ struct ContentView: View {
                     }
                 } else {
                     // 사용자 데이터 로딩 중
-                    Text("Loading user data...")
+                    Image(systemName: "slowmo")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .symbolEffect(.variableColor)
                         .onAppear {
                             loadUserData()
                         }
