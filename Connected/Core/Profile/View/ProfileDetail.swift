@@ -6,9 +6,12 @@ import Kingfisher
 
 struct ProfileDetail: View {
     @StateObject private var viewModel = ProfileDetailViewModel()
+    @StateObject private var friendViewModel = FriendsViewModel()
+    @StateObject private var notificationManager = NotificationManager()
     
     @State private var selectedImageIndex = 0
     @State private var showMessageView = false
+    @State private var showAlert = false
     
     let user: User
     
@@ -18,113 +21,141 @@ struct ProfileDetail: View {
     }
     
     var body: some View {
-            ZStack{
-                VStack {
-                    // Swipeable Image Gallery
-                    TabView(selection: $selectedImageIndex) {
-                        ForEach(viewModel.userImagesUrl, id: \.self) { imageUrl in
-                            KFImage(URL(string: imageUrl))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(height: 500)
-                                .clipped()
-                                .tag(imageUrl)
-                        }
+        ZStack {
+            VStack {
+                // Swipeable Image Gallery
+                TabView(selection: $selectedImageIndex) {
+                    ForEach(viewModel.userImagesUrl, id: \.self) { imageUrl in
+                        KFImage(URL(string: imageUrl))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 500)
+                            .clipped()
+                            .tag(imageUrl)
                     }
-                    .tabViewStyle(PageTabViewStyle())
-                    .frame(height: 500)
-                    
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 20) {
-                            HStack(spacing: 20) {
-                                // 프로필 이미지
-//                                if let profileImageUrl = viewModel.profileImageUrl {
-//                                    KFImage(URL(string: profileImageUrl))
-//                                        .resizable()
-//                                        .clipShape(Circle())
-//                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-//                                        .shadow(radius: 1)
-//                                        .frame(width: 50, height: 50)
-//                                } else {
-//                                    Image(systemName: "person.circle.fill")
-//                                        .resizable()
-//                                        .clipShape(Circle())
-//                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-//                                        .shadow(radius: 1)
-//                                        .frame(width: 50, height: 50)
-//                                        .foregroundColor(.gray)
-//                                }
+                }
+                .tabViewStyle(PageTabViewStyle())
+                .frame(height: 500)
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        HStack(spacing: 20) {
+                            // 프로필 이미지
+                            //                                if let profileImageUrl = viewModel.profileImageUrl {
+                            //                                    KFImage(URL(string: profileImageUrl))
+                            //                                        .resizable()
+                            //                                        .clipShape(Circle())
+                            //                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            //                                        .shadow(radius: 1)
+                            //                                        .frame(width: 50, height: 50)
+                            //                                } else {
+                            //                                    Image(systemName: "person.circle.fill")
+                            //                                        .resizable()
+                            //                                        .clipShape(Circle())
+                            //                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            //                                        .shadow(radius: 1)
+                            //                                        .frame(width: 50, height: 50)
+                            //                                        .foregroundColor(.gray)
+                            //                                }
+                            
+                            Text(viewModel.userName)
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .lineLimit(1)
+                            
+                            if let userAge = viewModel.userAge {
+                                Text("\(userAge)")
+                                    .font(.title3)
+                            }
+                            
+                            if viewModel.userGender == "male" {
+                                Text("남")
+                                    .foregroundColor(.blue)
+                                    .font(.title3)
+                            } else {
+                                Text("여")
+                                    .foregroundColor(.pink)
+                                    .font(.title3)
+                            }
+                            
+                            if user.id != currentUserId {
+                                Spacer()
                                 
-                                Text(viewModel.userName)
-                                    .font(.title)
-                                    .fontWeight(.bold)
-                                    .lineLimit(1)
                                 
-                                if let userAge = viewModel.userAge {
-                                    Text("\(userAge)")
-                                        .font(.title3)
-                                }
-                                
-                                if viewModel.userGender == "male" {
-                                    Text("남")
-                                        .foregroundColor(.blue)
-                                        .font(.title3)
-                                } else {
-                                    Text("여")
-                                        .foregroundColor(.pink)
-                                        .font(.title3)
-                                }
-                                
-                                if user.id != currentUserId {
-                                    Spacer()
-                                    
-                                    // 친구추가 버튼
+                                switch friendViewModel.friendStatus {
+                                case .notFriends:
+                                    // 친구추가 버튼 (활성화 상태)
                                     Button(action: {
+                                        friendViewModel.sendFriendRequest(to: user.id)
+                                        showAlert = true
+                                           
+                                        
                                         
                                     }) {
                                         Image(systemName: "person.badge.plus")
                                             .font(.title3)
                                     }
-                                    
-                                    // 메시지 버튼
-                                    Button(action: {
-                                        showMessageView = true
-                                    }) {
-                                        Image(systemName: "plus.message")
-                                            .font(.title3)
-                                    }
+                                    .alert("친구 추가", isPresented: $showAlert) {
 
+                                    } message: {
+                                        Text("친구추가 요청을 보냈습니다.")
+                                    }
+                                case .requestSent:
+                                    // 친구추가 버튼 (비활성화 및 회색)
+                                    Button(action: {}) {
+                                        Image(systemName: "person.badge.plus")
+                                            .font(.title3)
+                                            .foregroundColor(.gray)
+                                    }
+                                    .disabled(true)
+                                case .friends:
+                                    // 이미 친구인 경우 다른 표시를 할 수 있습니다.
+                                    Text("친구입니다")
+                                        .font(.title3)
+                                        .foregroundColor(.green)
                                 }
-                        
+                                
+                                // 메시지 버튼
+                                Button(action: {
+                                    showMessageView = true
+                                }) {
+                                    Image(systemName: "plus.message")
+                                        .font(.title3)
+                                }
+                                
                             }
-                            .padding(.bottom, 10)
                             
-                            // User's Details and Preferences
-                            if !viewModel.userMBTI.isEmpty {
-                                tagView(title: "MBTI", items: [viewModel.userMBTI])
-                            }
-                            
-                            tagView(title: "Music", items: viewModel.userMusic)
-                            tagView(title: "Movie", items: viewModel.userMovie)
-                            tagView(title: "Interests", items: viewModel.userInterests)
                         }
-                        .padding(25)
+                        .padding(.bottom, 10)
+                        
+                        // User's Details and Preferences
+                        if !viewModel.userMBTI.isEmpty {
+                            tagView(title: "MBTI", items: [viewModel.userMBTI])
+                        }
+                        
+                        tagView(title: "Music", items: viewModel.userMusic)
+                        tagView(title: "Movie", items: viewModel.userMovie)
+                        tagView(title: "Interests", items: viewModel.userInterests)
                     }
+                    .padding(25)
                 }
-                .onAppear {
-                    viewModel.fetchUserProfile(for: user.id) // 전달받은 UID로 프로필 데이터 불러오기
-                }
-                .navigationDestination(isPresented: $showMessageView){
-                   ChatLogView(user: user)
-               }
             }
+            
+        }//NavigationStack
+        .onAppear {
+            viewModel.fetchUserProfile(for: user.id)
+            friendViewModel.checkFriendStatus(currentUserId: currentUserId, profileUserId: user.id)
+        }
+        .navigationDestination(isPresented: $showMessageView){
+            ChatLogView(user: user)
+        }
     }
     
     func tagView(title: String, items: [String]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(title)
-               .font(.headline)
-               .fontWeight(.bold)
+                .font(.headline)
+                .fontWeight(.bold)
             FlexibleView(data: items) { item in
                 if title == "MBTI" {
                     Text(item.uppercased())
@@ -153,7 +184,7 @@ struct ProfileDetail: View {
         }
     }
 }
-    
+
 
 #Preview {
     ProfileDetail(user: User.MOCK_USERS[0])

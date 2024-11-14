@@ -11,8 +11,8 @@ struct ContentView: View {
     @State private var isActive = false
     @State private var size = 0.8
     @State private var opacity = 0.1
-    @State private var hasImages = false
-    
+    @State private var hasImages: Bool? = nil
+
     let db = Firestore.firestore()
     
 //     테스트 시 자동 로그아웃
@@ -29,33 +29,36 @@ struct ContentView: View {
                         .environmentObject(registrationViewModel)
                         .environmentObject(loginViewModel)
                 } else if let currentUser = authService.currentUser {
-                    if hasImages {
-                        MainView(user: currentUser)
-                    } else {
-                        Name(user: currentUser)
-                    }
-                } else {
-                    // 사용자 데이터 로딩 중
-                    Image(systemName: "slowmo")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .symbolEffect(.variableColor)
-                        .onAppear {
-                            loadUserData()
+                    if let hasImages = hasImages {
+                        if hasImages {
+                            MainView(user: currentUser)
+                        } else {
+                            Name(user: currentUser)
                         }
+                    } else {
+                        // 사용자 데이터 로딩 중
+                        Image(systemName: "slowmo")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .symbolEffect(.variableColor)
+                            .onAppear {
+                                loadUserData()
+                            }
+                    }
                 }
             }
             .onAppear {
-                   if let currentUser = authService.currentUser {
-                       checkForOtherImages(userId: currentUser.id ?? "")
-                   }
-               }
-               .onChange(of: authService.currentUser) { newCurrentUser in
-                   if let user = newCurrentUser {
-                       checkForOtherImages(userId: user.id ?? "")
-                   }
-               }
-        } else {
+                if hasImages == nil, let currentUser = authService.currentUser {
+                    checkForOtherImages(userId: currentUser.id ?? "")
+                }
+            }
+            .onChange(of: authService.currentUser) { newCurrentUser in
+                if let user = newCurrentUser {
+                    checkForOtherImages(userId: user.id ?? "")
+                }
+            }
+            
+        }else {
             VStack {
                 VStack {
                     Image("SplashLogo")
@@ -89,7 +92,12 @@ struct ContentView: View {
             }
         }
     }
-
+    
+    // 데이터 로드중에 hasImages가 일시적으로 false로 설정될 수 있기에 Name뷰로 넘어가는 오류 =>
+    // hasImages의 상태를 세 가지로 구분합니다:
+    //    nil: 아직 데이터를 로드하지 않은 상태
+    //    true: 이미지가 있음
+    //    false: 이미지가 없음
     private func checkForOtherImages(userId: String) {
         let document = db.collection("users").document(userId)
         document.getDocument { (document, error) in

@@ -6,8 +6,6 @@ import FirebaseFirestoreSwift
 struct MainMessagesView: View {
     @ObservedObject var vm: MainMessagesViewModel
     
-    
-    
     @State var shouldShowLogOutOptions = false
     @State private var selectedProfileUser: User?
     @State private var shouldNavigateToChatLogView = false
@@ -16,7 +14,6 @@ struct MainMessagesView: View {
     init(user: User) {
         self.vm = MainMessagesViewModel()
     }
-    
     
     var body: some View {
         NavigationStack {
@@ -42,6 +39,12 @@ struct MainMessagesView: View {
         ScrollView {
             Spacer()
                 .frame(height: 8)
+            VStack(alignment: .leading){
+                if (vm.recentMessages.isEmpty) {
+                    Text("메시지가 없습니다.")
+                    
+                }
+            }
             ForEach(vm.recentMessages) { recentMessage  in
                 VStack {
                     HStack(spacing: 16) {
@@ -61,7 +64,7 @@ struct MainMessagesView: View {
                                 .frame(width: 40, height: 40)
                                 .clipped()
                                 .cornerRadius(50)
-                                .overlay(Circle().stroke(Color(.label), lineWidth: 1))
+                                .overlay(Circle().stroke(Color(.white), lineWidth: 1))
                         }
                         
                         VStack(alignment: .leading) {

@@ -6,6 +6,8 @@ import Kingfisher
 
 struct ConnectFriends: View {
     @StateObject private var firestoreManager = FirestoreManager()
+    @StateObject private var friendsViewModel = FriendsViewModel()
+    
     @State private var isLoading = true
     @State private var similarUsers: [User] = []
     @State private var currentUser: User?
@@ -59,7 +61,7 @@ struct ConnectFriends: View {
                                         
                                         Spacer()
                                         
-                                        if sentFriendRequests.contains(user.id) {
+                                        if friendsViewModel.sentFriendRequests.contains(user.id) {
                                             Text("요청됨")
                                                 .font(.subheadline)
                                                 .fontWeight(.medium)
@@ -70,7 +72,7 @@ struct ConnectFriends: View {
                                                 .cornerRadius(10)
                                         } else {
                                             Button(action: {
-                                                sendFriendRequest(to: user.id)
+                                                friendsViewModel.sendFriendRequest(to: user.id)
                                             }) {
                                                 Text("친구추가")
                                                     .font(.subheadline)
@@ -144,7 +146,7 @@ struct ConnectFriends: View {
                         let newUserIds = newSimilarUsers.compactMap { $0.id }
                         self.alreadyShownUserIds.formUnion(newUserIds)
                     }
-                    self.loadSentFriendRequests() // loadSentFriendRequests 호출 추가
+                    friendsViewModel.loadSentFriendRequests() // loadSentFriendRequests 호출 추가
                 }
             }
         }
@@ -165,60 +167,7 @@ struct ConnectFriends: View {
         }
     }
     
-    private func sendFriendRequest(to userId: String) {
-        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-        let db = Firestore.firestore()
-        
-        db.collection("friendRequests").addDocument(data: [
-            "fromUserId": currentUserId,
-            "toUserId": userId,
-            "status": "pending",
-            "timestamp": FieldValue.serverTimestamp()
-        ]) { error in
-            if let error = error {
-                print("Error sending friend request: \(error.localizedDescription)")
-                // 사용자에게 에러 알림 표시
-            } else {
-                print("Friend request sent successfully")
-                DispatchQueue.main.async {
-                    self.sentFriendRequests.insert(userId)
-                }
-                
-                // 알림 생성
-                db.collection("notifications").addDocument(data: [
-                    "type": "friendRequest",
-                    "fromUserId": currentUserId,
-                    "toUserId": userId,
-                    "status": "pending",
-                    "timestamp": FieldValue.serverTimestamp()
-                ]) { error in
-                    if let error = error {
-                        print("Error creating notification: \(error.localizedDescription)")
-                        // 사용자에게 에러 알림 표시
-                    }
-                }
-            }
-        }
-    }
     
-    private func loadSentFriendRequests() {
-        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-        let db = Firestore.firestore()
-        
-        db.collection("friendRequests")
-            .whereField("fromUserId", isEqualTo: currentUserId)
-            .getDocuments { querySnapshot, error in
-                if let error = error {
-                    print("Error fetching sent friend requests: \(error.localizedDescription)")
-                    return
-                }
-                
-                let sentRequests = querySnapshot?.documents.compactMap { $0.data()["toUserId"] as? String } ?? []
-                DispatchQueue.main.async {
-                    self.sentFriendRequests = Set(sentRequests)
-                }
-            }
-    }
     
     private func findSimilarUsers(currentUser: User, allUsers: [User], excludeUserIds: Set<String> = []) -> [User] {
         let sortedUsers = allUsers.filter { user in

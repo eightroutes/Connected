@@ -15,10 +15,9 @@ struct Interests: View {
     var body: some View {
         NavigationStack {
             VStack {
-                ZStack {
+                ZStack(alignment: .leading) {
                     Rectangle()
-                        .frame(width: UIScreen.main.bounds.width/7*5, height: 5)
-                        .padding(.leading, -200)
+                        .frame(width: UIScreen.main.bounds.width/8*5, height: 5)
                     Rectangle()
                         .frame(width: UIScreen.main.bounds.width, height: 5)
                         .foregroundStyle(Color.gray)

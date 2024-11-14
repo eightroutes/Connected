@@ -20,10 +20,9 @@ struct ProfileImageSetting: View {
         NavigationStack {
             ZStack {
                 VStack {
-                    ZStack {
+                    ZStack(alignment: .leading) {
                         Rectangle()
-                            .frame(width: UIScreen.main.bounds.width / 7 * 6, height: 5)
-                            .padding(.leading, -200)
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 5)
                         Rectangle()
                             .frame(width: UIScreen.main.bounds.width, height: 5)
                             .foregroundStyle(Color.gray)
@@ -146,82 +145,7 @@ struct ProfileImageSetting: View {
     }
 }
 
-struct ImagePickerView: UIViewControllerRepresentable {
-    @Binding var isPresented: Bool
-    @Binding var selectedImage: UIImage?
-    @Binding var showCropView: Bool
-    
-    func makeUIViewController(context: Context) -> UIImagePickerController {
-        let picker = UIImagePickerController()
-        picker.delegate = context.coordinator
-        return picker
-    }
-    
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-    
-    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-        let parent: ImagePickerView
-        
-        init(_ parent: ImagePickerView) {
-            self.parent = parent
-        }
-        
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let uiImage = info[.originalImage] as? UIImage {
-                parent.selectedImage = uiImage
-                parent.showCropView = true
-            }
-            parent.isPresented = false
-        }
-        
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.isPresented = false
-        }
-    }
-}
 
-struct CropViewControllerWrapper: UIViewControllerRepresentable {
-    var image: UIImage
-    @Binding var croppedImage: UIImage?
-    @Binding var isPresented: Bool
-    
-    func makeUIViewController(context: Context) -> CropViewController {
-        let cropViewController = CropViewController(croppingStyle: .circular, image: image)
-        cropViewController.delegate = context.coordinator
-        cropViewController.aspectRatioPreset = .presetSquare
-        cropViewController.aspectRatioLockEnabled = true
-        cropViewController.resetAspectRatioEnabled = false
-        
-        return cropViewController
-    }
-    
-    func updateUIViewController(_ uiViewController: CropViewController, context: Context) {}
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-    
-    class Coordinator: NSObject, CropViewControllerDelegate {
-        let parent: CropViewControllerWrapper
-        
-        init(_ parent: CropViewControllerWrapper) {
-            self.parent = parent
-        }
-        
-        func cropViewController(_ cropViewController: CropViewController, didCropToCircularImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
-            parent.croppedImage = image
-            parent.isPresented = false
-        }
-        
-        func cropViewControllerDidCancel(_ cropViewController: CropViewController) {
-            parent.isPresented = false
-        }
-    }
-}
 
 struct ProfileImageSetting_Previews: PreviewProvider {
     static var previews: some View {

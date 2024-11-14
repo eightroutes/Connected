@@ -21,9 +21,9 @@ struct ProfileView: View {
                             .resizable()
                             .clipShape(Circle())
                             .overlay(
-                                Circle().stroke(Color.white, lineWidth: 2)
+                                Circle().stroke(Color.white, lineWidth: 1)
                             )
-                            .shadow(radius: 3)
+                            .shadow(radius: 1)
                             .frame(width: self.radius, height: self.radius)
                     }
                 } else {
@@ -33,9 +33,9 @@ struct ProfileView: View {
                             .resizable()
                             .clipShape(Circle())
                             .overlay(
-                                Circle().stroke(Color.white, lineWidth: 2)
+                                Circle().stroke(Color.white, lineWidth: 1)
                             )
-                            .shadow(radius: 3)
+                            .shadow(radius: 1)
                             .frame(width: self.radius, height: self.radius)
                     }
                 }
@@ -48,7 +48,7 @@ struct ProfileView: View {
                             .scaledToFit()
                             .frame(width: self.radius, height: self.radius)
                             .foregroundColor(.gray)
-                            .shadow(radius: 3)
+                            .shadow(radius: 1)
                     }
                 } else {
                     NavigationLink(destination: ProfileDetail(user: user)) {
@@ -57,7 +57,7 @@ struct ProfileView: View {
                             .scaledToFit()
                             .frame(width: self.radius, height: self.radius)
                             .foregroundColor(.gray)
-                            .shadow(radius: 3)
+                            .shadow(radius: 1)
                     }
                 }
             }

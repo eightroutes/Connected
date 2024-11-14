@@ -9,17 +9,114 @@
 import FirebaseFirestore
 import FirebaseAuth
 
+enum FriendStatus {
+    case notFriends        // 친구가 아님
+    case requestSent       // 친구 요청을 보낸 상태
+    case friends           // 이미 친구인 상태
+}
+
+
 class FriendsViewModel: ObservableObject {
     @Published var friends: [User] = []
     @Published var errorMessage: String?
+    @Published var friendStatus: FriendStatus = .notFriends
+    @Published var sentFriendRequests: Set<String> = []
 
+
+    @Published var isFriend: Bool = false
     
     private let db = Firestore.firestore()
     
-  
+    func sendFriendRequest(to userId: String) {
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        
+        db.collection("friendRequests").addDocument(data: [
+            "fromUserId": currentUserId,
+            "toUserId": userId,
+            "status": "pending",
+            "timestamp": FieldValue.serverTimestamp()
+        ]) { error in
+            if let error = error {
+                print("Error sending friend request: \(error.localizedDescription)")
+                // 사용자에게 에러 알림 표시
+            } else {
+                print("Friend request sent successfully")
+                DispatchQueue.main.async {
+                    self.sentFriendRequests.insert(userId)
+                    self.friendStatus = .requestSent 
+                }
+                
+                // 알림 생성
+                db.collection("notifications").addDocument(data: [
+                    "type": "friendRequest",
+                    "fromUserId": currentUserId,
+                    "toUserId": userId,
+                    "status": "pending",
+                    "timestamp": FieldValue.serverTimestamp()
+                ]) { error in
+                    if let error = error {
+                        print("Error creating notification: \(error.localizedDescription)")
+                        // 사용자에게 에러 알림 표시
+                    }
+                }
+            }
+        }
+    }
+    
+    func loadSentFriendRequests() {
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        
+        db.collection("friendRequests")
+            .whereField("fromUserId", isEqualTo: currentUserId)
+            .getDocuments { querySnapshot, error in
+                if let error = error {
+                    print("Error fetching sent friend requests: \(error.localizedDescription)")
+                    return
+                }
+                
+                let sentRequests = querySnapshot?.documents.compactMap { $0.data()["toUserId"] as? String } ?? []
+                DispatchQueue.main.async {
+                    self.sentFriendRequests = Set(sentRequests)
+                }
+            }
+    }
+    
+    
+    func checkFriendStatus(currentUserId: String?, profileUserId: String) {
+        guard let currentUserId = currentUserId else { return }
+                
+        
+        db.collection("users").document(currentUserId).collection("friends").document(profileUserId).getDocument { snapshot, error in
+                if let snapshot = snapshot, snapshot.exists {
+                    DispatchQueue.main.async {
+                        self.friendStatus = .friends
+                    }
+                } else {
+                    // 친구 요청을 보냈는지 확인
+                    self.db.collection("friendRequests").whereField("fromUserId", isEqualTo: currentUserId).whereField("toUserId", isEqualTo: profileUserId).getDocuments { querySnapshot, error in
+                        if let documents = querySnapshot?.documents, !documents.isEmpty {
+                            DispatchQueue.main.async {
+                                self.friendStatus = .requestSent
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.friendStatus = .notFriends
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
+
+
     
     func fetchFriends() {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+        
+        let db = Firestore.firestore()
         
         db.collection("users").document(currentUserId).getDocument { [weak self] document, error in
             guard let self = self else { return }

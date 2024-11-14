@@ -16,10 +16,9 @@ struct Name: View {
         NavigationStack {
             ZStack {
                 VStack {
-                    ZStack {
+                    ZStack(alignment: .leading) {
                         Rectangle()
-                            .frame(width: UIScreen.main.bounds.width/7*1, height: 5)
-                            .padding(.leading, -200)
+                            .frame(width: UIScreen.main.bounds.width/8*1, height: 5)
                         Rectangle()
                             .frame(width: UIScreen.main.bounds.width, height: 5)
                             .foregroundStyle(Color.gray)
@@ -92,7 +91,7 @@ struct Name: View {
                     }
                     
                 }
-                .ignoresSafeArea(.keyboard)
+//                .ignoresSafeArea(.keyboard)
                 .navigationBarBackButtonHidden(true)
             }
         }//NavigationStack

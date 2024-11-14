@@ -18,7 +18,7 @@ struct Birthday: View {
                 VStack {
                     ZStack(alignment: .leading){
                         Rectangle()
-                            .frame(width: UIScreen.main.bounds.width/7*2, height: 5)
+                            .frame(width: UIScreen.main.bounds.width/8*2, height: 5)
                         Rectangle()
                             .frame(width: UIScreen.main.bounds.width, height: 5)
                             .foregroundStyle(Color.gray)

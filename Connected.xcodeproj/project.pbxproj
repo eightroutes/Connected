@@ -41,7 +41,7 @@
 		66DC52AA2CD476AD003F5A33 /* UserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocation.swift; sourceTree = "<group>"; };
 		66DC52AC2CD477F8003F5A33 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		66DC52AE2CD4780D003F5A33 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
-		66DCB9A72C2AB49B000C7736 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		66DCB9A72C2AB49B000C7736 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -111,10 +111,10 @@
 			isa = PBXGroup;
 			children = (
 				66DC52B02CD47993003F5A33 /* Core */,
-				66D17F642CA25DB600C96540 /* GoogleService-Info.plist */,
-				66DCB9A72C2AB49B000C7736 /* Info.plist */,
 				6609BFD32C0CBCA700CC8C4E /* Model */,
 				662830012BC35B0B0010EFAD /* ConnectedApp.swift */,
+				66DCB9A72C2AB49B000C7736 /* Info.plist */,
+				66D17F642CA25DB600C96540 /* GoogleService-Info.plist */,
 				662830052BC35B0C0010EFAD /* Assets.xcassets */,
 				662830072BC35B0C0010EFAD /* Preview Content */,
 			);

@@ -49,7 +49,7 @@ struct EmailRegisterView: View {
                 .padding(.bottom, 30)
                 
                 Button(action: {
-                    Task {
+                    Task { @MainActor in
                         do {
                             try await viewModel.createUser()
                             showAlert = true
@@ -66,11 +66,7 @@ struct EmailRegisterView: View {
                         .cornerRadius(30)
                 }
                 .disabled(!(isValidEmail(viewModel.email) && isValidPassword(viewModel.password)))
-                .alert(isPresented: $showAlert) {
-                    Alert(title: Text("회원가입 완료"), message: Text("회원가입이 성공적으로 완료되었습니다."), dismissButton: .default(Text("확인")) {
-                        dismiss()
-                    })
-                }
+                
                 Spacer()
                 // 오류메시지
               Text(errorMessage)
@@ -86,6 +82,11 @@ struct EmailRegisterView: View {
                 
             }
             .padding()
+            .alert(isPresented: $showAlert) {
+                Alert(title: Text("회원가입 완료"), message: Text("회원가입이 성공적으로 완료되었습니다."), dismissButton: .default(Text("확인")) {
+                    dismiss()
+                })
+            }
         }//NavigationStack
         .tint(.black)
     }
