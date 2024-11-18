@@ -22,64 +22,67 @@ struct ContentView: View {
     
     
     var body: some View {
-        if isActive {
-            Group {
-                if authService.userSession == nil {
-                    LoginView()
-                        .environmentObject(registrationViewModel)
-                        .environmentObject(loginViewModel)
-                } else if let currentUser = authService.currentUser {
-                    if let hasImages = hasImages {
-                        if hasImages {
-                            MainView(user: currentUser)
+            if isActive {
+                Group {
+                    if authService.userSession == nil {
+                        LoginView()
+                            .environmentObject(registrationViewModel)
+                            .environmentObject(loginViewModel)
+                    } else if let currentUser = authService.currentUser {
+                        if let hasImages = hasImages {
+                            if hasImages {
+                                MainView(user: currentUser)
+                            } else {
+                                Name(user: currentUser)
+                            }
                         } else {
-                            Name(user: currentUser)
+                            // 사용자 데이터 로딩 중
+                            Image(systemName: "slowmo")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .symbolEffect(.variableColor)
+                                .onAppear {
+                                    loadUserData()
+                                }
                         }
-                    } else {
-                        // 사용자 데이터 로딩 중
-                        Image(systemName: "slowmo")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .symbolEffect(.variableColor)
-                            .onAppear {
+                    }
+                }
+                .onAppear {
+                    if hasImages == nil, let currentUser = authService.currentUser {
+                        checkForOtherImages(userId: currentUser.id ?? "")
+                    }
+                }
+                .onChange(of: authService.currentUser) { newCurrentUser in
+                    if let user = newCurrentUser {
+                        checkForOtherImages(userId: user.id ?? "")
+                    }
+                }
+                
+            }else {
+                VStack {
+                    VStack {
+                        Image("SplashLogo")
+                    }
+                    .scaleEffect(size)
+                }
+                .tint(.black)
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        withAnimation {
+                            self.isActive = true
+                            //                        if let currentUser = authService.currentUser {
+                            //                            checkForOtherImages(userId: currentUser.id)
+                            //                        }
+                            if authService.userSession != nil && authService.currentUser == nil {
                                 loadUserData()
                             }
-                    }
-                }
-            }
-            .onAppear {
-                if hasImages == nil, let currentUser = authService.currentUser {
-                    checkForOtherImages(userId: currentUser.id ?? "")
-                }
-            }
-            .onChange(of: authService.currentUser) { newCurrentUser in
-                if let user = newCurrentUser {
-                    checkForOtherImages(userId: user.id ?? "")
-                }
-            }
-            
-        }else {
-            VStack {
-                VStack {
-                    Image("SplashLogo")
-                }
-                .scaleEffect(size)
-            }
-            .tint(.black)
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    withAnimation {
-                        self.isActive = true
-//                        if let currentUser = authService.currentUser {
-//                            checkForOtherImages(userId: currentUser.id)
-//                        }
-                        if authService.userSession != nil && authService.currentUser == nil {
-                            loadUserData()
                         }
                     }
                 }
+                .tint(.black)
+
             }
-        }
+        
     }
     
     private func loadUserData() {

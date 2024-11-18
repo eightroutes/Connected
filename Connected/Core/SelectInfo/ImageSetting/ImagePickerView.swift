@@ -54,11 +54,13 @@ struct ImagePickerView: UIViewControllerRepresentable {
 
 struct CropViewControllerWrapper: UIViewControllerRepresentable {
     var image: UIImage
+    var croppingShape: CropViewCroppingStyle = .default
+
     @Binding var croppedImage: UIImage?
     @Binding var isPresented: Bool
     
     func makeUIViewController(context: Context) -> CropViewController {
-        let cropViewController = CropViewController(croppingStyle: .circular, image: image)
+        let cropViewController = CropViewController(croppingStyle: croppingShape, image: image)
         cropViewController.delegate = context.coordinator
         cropViewController.aspectRatioPreset = .presetSquare
         cropViewController.aspectRatioLockEnabled = true

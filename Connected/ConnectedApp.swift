@@ -21,6 +21,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         IQKeyboardManager.shared.resignOnTouchOutside = true
         IQKeyboardManager.shared.layoutIfNeededOnUpdate = false
         
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 0
+        
         return true
     }
     

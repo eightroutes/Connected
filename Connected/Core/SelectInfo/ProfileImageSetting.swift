@@ -99,7 +99,7 @@ struct ProfileImageSetting: View {
             }
             .fullScreenCover(isPresented: $showingCropView) {
                 if let image = profileImage {
-                    CropViewControllerWrapper(image: image, croppedImage: $profileImage, isPresented: $showingCropView)
+                    CropViewControllerWrapper(image: image, croppingShape: .circular, croppedImage: $profileImage, isPresented: $showingCropView)
                 }
             }
         }

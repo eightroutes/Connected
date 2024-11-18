@@ -12,40 +12,48 @@ struct AddGroupView: View {
     @State private var locationText = ""
     @State private var groupName = ""
     @State private var theme = ""
+    @State private var tagInput = ""
     @State private var groupDescription = ""
     @State private var groupImage: UIImage?
     @State private var showingImagePicker = false
     @State private var showingCropView = false
-
+    @State private var showAlert = false
+    @State private var errorMessage = ""
     
     
-    @StateObject private var vm = GroupViewModel();
-
+    @StateObject private var vm = GroupViewModel()
+    
     
     var body: some View {
         NavigationStack {
             VStack {
                 HStack {
+                    // 이미지 추가
                     ZStack {
                         Rectangle()
                             .fill(Color.gray.opacity(0.2))
-                            .frame(width: 80, height: 80)
+                            .frame(width: 120, height: 120)
                             .shadow(radius: 1)
                         
                         if let image = groupImage {
                             Image(uiImage: image)
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: 60, height: 60)
+                                .frame(width: 120, height: 120)
+                                .clipShape(Rectangle())
+                            
                         }
+                        
                         
                         Button(action: {
                             showingImagePicker = true
                         }) {
-                            Image(systemName: "plus")
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(.white)
+                            if groupImage == nil {
+                                Image(systemName: "plus")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(.white)
+                            }
                         }
                         
                     }//ZStack
@@ -54,56 +62,120 @@ struct AddGroupView: View {
                     }
                     .fullScreenCover(isPresented: $showingCropView) {
                         if let image = groupImage {
-                            CropViewControllerWrapper(image: image, croppedImage: $groupImage, isPresented: $showingCropView)
+                            CropViewControllerWrapper(image: image, croppingShape: .default, croppedImage: $groupImage, isPresented: $showingCropView)
                         }
                     }
-                        
-                
-                    
-                    
                     VStack {
                         HStack{
-                            Text("지역")
                             TextField("지역", text: $locationText)
+                                .padding()
+                                .frame(height: 36)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(5)
                         }
                         
                         
                         HStack{
-                            Text("이름")
                             TextField("모임 이름", text: $groupName)
+                                .padding()
+                                .frame(height: 36)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(5)
                         }
                         
                         HStack {
-                            Text("주제")
-                            TextField("주제 이름", text: $theme)
-                            
+                            TextField("주제", text: $theme)
+                                .padding()
+                                .frame(height: 36)
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(5)
+            
                         }
+                        
+                        
+                        
                     }
                     
                 }
                 
                 
                 HStack {
-                    TextField("모임에 대해 설명해주세요", text: $groupDescription)
+                    
+                    TextEditor(text: $groupDescription)
+                        .frame(height: 350)
+                        .padding()
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(5)
+                    
                 }
+                
+                
+                
                 
                 Spacer()
                 
+                // 오류 메시지 표시
+                if !errorMessage.isEmpty {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .font(.footnote)
+                        .padding(.bottom, 5)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                errorMessage = ""
+                            }
+                        }
+                }
+
+                
                 Button {
-                    
+                    createGroup()
                 } label: {
                     Text("모임 만들기")
                         .frame(width: 250)
                         .foregroundColor(.white)
                         .padding()
-                        .background(Color.brand)
+                        .background(isValidInput() ? Color.brand : Color.secondary)
                         .cornerRadius(30)
                 }
+                .disabled(!isValidInput())
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("모임 생성 완료"), message: Text("모임이 성공적으로 생성되었습니다."), dismissButton: .default(Text("확인")) {
+                        // 네비게이션 또는 다른 동작
+                    })
+                }
+                
+                
                 
             }
-            .padding(.horizontal)
+            .padding()
+            .navigationTitle("모임 만들기")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
+    
+    // 입력 값 검증
+    private func isValidInput() -> Bool {
+        return !locationText.isEmpty && !groupName.isEmpty && !theme.isEmpty && !groupDescription.isEmpty
+    }
+    
+    // 그룹 생성 함수
+    private func createGroup() {
+        vm.createGroup(name: groupName, description: groupDescription, theme: theme, location: locationText, image: groupImage) { success, error in
+            if success {
+                showAlert = true
+                // 입력 필드 초기화
+                locationText = ""
+                groupName = ""
+                theme = ""
+                groupDescription = ""
+                groupImage = nil
+            } else if let error = error {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+    
 }
 
 #Preview {

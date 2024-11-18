@@ -20,7 +20,7 @@ struct MainView: View {
                                .padding(.top, 10)
                        }
                     case 1:
-                        FindGroup(groups: Groups.MOCK_GROUPS[0])
+                        GroupView()
                     case 2:
                         ConnectFriends()
                     case 3:
