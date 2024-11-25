@@ -4,13 +4,14 @@ import FirebaseAuth
 
 struct GroupDetailView: View {
     let group: Groups
-
+    
     @State private var showChatView = false
     @State private var showErrorAlert = false
     @State private var errorMessage = ""
-
+    
+    
     @StateObject private var viewModel = GroupDetailViewModel()
-
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -65,6 +66,7 @@ struct GroupDetailView: View {
                         title: Text("오류"),
                         message: Text(errorMessage),
                         dismissButton: .default(Text("확인"))
+                        
                     )
                 }
                 
@@ -86,7 +88,7 @@ struct GroupDetailView: View {
             }
         }
     }
-
+    
     func joinGroup() {
         if viewModel.isMember {
             // 이미 멤버인 경우 채팅방으로 이동

@@ -1,10 +1,14 @@
 import SwiftUI
 
+
 struct MainView: View {
     @State private var selectedTab: Int = 0
     @StateObject var viewModel = MainViewModel()
     
     let user: User
+    
+    
+    
     
     var body: some View {
         NavigationStack {

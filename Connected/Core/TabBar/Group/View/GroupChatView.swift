@@ -1,20 +1,12 @@
-//
-//  GroupChatView.swift
-//  Connected
-//
-//  Created by 정근호 on 11/15/24.
-//
-
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 import Kingfisher
-
+import PhotosUI
+import FirebaseStorage
 
 struct GroupChatView: View {
-    
     let group: Groups
-    
     @ObservedObject var vm: GroupChatViewModel
     
     init(group: Groups) {
@@ -23,8 +15,12 @@ struct GroupChatView: View {
     }
     
     @State private var dynamicHeight: CGFloat = 32 // Initial height
+    @State private var selectedImage: UIImage?
+    @State private var isPickerPresented = false
+    @State private var isUploadingImage = false
     
     var body: some View {
+        
         VStack {
             messagesView
             if !vm.errorMessage.isEmpty {
@@ -38,6 +34,15 @@ struct GroupChatView: View {
         .onDisappear {
             vm.firestoreListener?.remove()
         }
+        .onChange(of: selectedImage) { _ in
+            if let image = selectedImage {
+                uploadImage(image)
+            }
+        }
+        .sheet(isPresented: $isPickerPresented) {
+            ImagePicker(selectedImage: $selectedImage)
+        }
+        
     }
     
     static let emptyScrollToString = "Empty"
@@ -66,7 +71,7 @@ struct GroupChatView: View {
     private var chatBottomBar: some View {
         HStack(alignment: .bottom, spacing: 18) {
             Button(action: {
-                // 사진 선택 액션
+                isPickerPresented = true
             }) {
                 Image(systemName: "photo.on.rectangle")
                     .font(.system(size: 24))
@@ -93,10 +98,16 @@ struct GroupChatView: View {
             .frame(height: dynamicHeight)
             
             Button(action: {
-                if !vm.chatText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    vm.handleSend(text: vm.chatText)
-                    vm.chatText = ""
-                    dynamicHeight = 32 // Reset height
+                if !vm.chatText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || selectedImage != nil {
+                    if let image = selectedImage {
+                        // 이미지가 선택된 경우 업로드 후 전송
+                        uploadImage(image)
+                    } else {
+                        // 텍스트만 있는 경우 바로 전송
+                        vm.handleSend(text: vm.chatText, imageUrl: nil)
+                        vm.chatText = ""
+                        dynamicHeight = 32 // Reset height
+                    }
                 }
             }) {
                 Text("Send")
@@ -104,9 +115,9 @@ struct GroupChatView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 8)
-            .background(vm.chatText.isEmpty ? Color.gray : Color.brand)
+            .background((!vm.chatText.isEmpty || selectedImage != nil) ? Color.brand : Color.gray)
             .cornerRadius(4)
-            .disabled(vm.chatText.isEmpty)
+            .disabled(vm.chatText.isEmpty && selectedImage == nil)
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
@@ -123,32 +134,51 @@ struct GroupChatView: View {
         dynamicHeight = min(max(size.height, minHeight), maxHeight)
     }
     
+    private func uploadImage(_ image: UIImage) {
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
+        let filename = UUID().uuidString
+        let ref = Storage.storage().reference(withPath: "group_chat_images/\(group.id ?? "unknown")/\(filename).jpg")
+        
+        isUploadingImage = true
+        
+        ref.putData(imageData, metadata: nil) { metadata, error in
+            isUploadingImage = false
+            if let error = error {
+                print("Failed to upload image: \(error)")
+                return
+            }
+            ref.downloadURL { url, error in
+                if let error = error {
+                    print("Failed to get download URL: \(error)")
+                    return
+                }
+                if let url = url {
+                    vm.handleSend(text: vm.chatText, imageUrl: url.absoluteString)
+                    selectedImage = nil
+                    vm.chatText = ""
+                    dynamicHeight = 32 // Reset height
+                }
+            }
+        }
+    }
+    
     struct MessageView: View {
         let message: GroupChatMessage
         @State private var user: User?
-        
         
         var body: some View {
             VStack {
                 if message.fromId == Auth.auth().currentUser?.uid {
                     HStack {
                         Spacer()
-                        Text(message.text)
-                            .padding()
-                            .background(Color.brand)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
+                        messageContent
                     }
                 } else {
                     HStack {
                         if let user = user {
                             ProfileView(user: user, radius: 24)
                         }
-                        Text(message.text)
-                            .padding()
-                            .background(Color(.systemGray5))
-                            .foregroundColor(.black)
-                            .cornerRadius(8)
+                        messageContent
                         Spacer()
                     }
                     .onAppear {
@@ -159,6 +189,26 @@ struct GroupChatView: View {
             .padding(.horizontal)
             .padding(.top, 8)
         }
+        
+        private var messageContent: some View {
+            VStack(alignment: .leading) {
+                if let imageUrl = message.imageUrl {
+                    KFImage(URL(string: imageUrl))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: 200)
+                        .cornerRadius(8)
+                }
+                if !message.text.isEmpty {
+                    Text(message.text)
+                        .padding()
+                        .background(message.fromId == Auth.auth().currentUser?.uid ? Color.brand : Color(.systemGray5))
+                        .foregroundColor(message.fromId == Auth.auth().currentUser?.uid ? .white : .black)
+                        .cornerRadius(8)
+                }
+            }
+        }
+        
         private func fetchUser() {
             Firestore.firestore().collection("users").document(message.fromId).getDocument { snapshot, error in
                 if let error = error {
@@ -176,11 +226,5 @@ struct GroupChatView: View {
             }
         }
     }
-    
-    
-    
-    
-    
 }
-
 

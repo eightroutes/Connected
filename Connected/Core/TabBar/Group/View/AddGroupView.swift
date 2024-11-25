@@ -142,6 +142,7 @@ struct AddGroupView: View {
                 .alert(isPresented: $showAlert) {
                     Alert(title: Text("모임 생성 완료"), message: Text("모임이 성공적으로 생성되었습니다."), dismissButton: .default(Text("확인")) {
                         // 네비게이션 또는 다른 동작
+                        
                     })
                 }
                 

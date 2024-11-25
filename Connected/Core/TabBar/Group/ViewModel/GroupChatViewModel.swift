@@ -75,17 +75,23 @@ class GroupChatViewModel: ObservableObject {
             }
     }
     
-    func handleSend(text: String) {
+    func handleSend(text: String, imageUrl: String?) {
         guard let fromId = Auth.auth().currentUser?.uid else { return }
         let groupId = group.id ?? ""
         
-        let messageData: [String: Any] = [
+        var messageData: [String: Any] = [
             FirebaseConstants.fromId: fromId,
             FirebaseConstants.text: text,
             FirebaseConstants.timestamp: Timestamp(),
             "userName": currentUserName,
             "userProfileImageUrl": currentUserProfileImageUrl
+            
         ]
+        
+        if let imageUrl = imageUrl {
+            messageData["imageUrl"] = imageUrl
+        }
+        
         
         let document = Firestore.firestore()
             .collection("group_messages")
@@ -107,6 +113,25 @@ class GroupChatViewModel: ObservableObject {
             self?.persistRecentGroupMessage(text: text)
         }
     }
+    
+//    func handleSendImage(url: String) {
+//        guard let fromId = Auth.auth().currentUser?.uid else { return }
+//        let messageData: [String: Any] = [
+//            "fromId": fromId,
+//            "timestamp": Timestamp(),
+//            "imageUrl": url
+//        ]
+//        
+//        Firestore.firestore().collection("groups").document(group.id!).collection("messages")
+//            .addDocument(data: messageData) { error in
+//                if let error = error {
+//                    print("Failed to send image message: \(error)")
+//                    return
+//                }
+//                print("Image message sent successfully")
+//            }
+//    }
+    
     
     private func persistRecentGroupMessage(text: String) {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }

@@ -27,7 +27,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         self.authorizationStatus = locationManager.authorizationStatus
         super.init()
         locationManager.delegate = self
+        // 원하는 정확도 설정
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        // 위치 업데이트 최소 거리 설정 (미터 단위)
+        locationManager.distanceFilter = 10 // 10미터마다 업데이트
+        
+        // 권한 요청 및 위치 업데이트 시작
         checkLocationAuthorization()
     }
     
@@ -76,8 +81,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             self.location = latestLocation
         }
         
-        // 위치 업데이트를 일시 중지하여 배터리 소모를 줄일 수 있습니다.
-        locationManager.stopUpdatingLocation()
     }
     
     // 위치 업데이트 실패 시 호출되는 델리게이트 메서드
@@ -97,34 +100,3 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 }
 
 
-
-
-//
-//import Foundation
-//import MapKit
-//import CoreLocation
-//
-//class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-//    private let locationManager = CLLocationManager()
-//    @Published var location: CLLocation?
-//    
-//    override init() {
-//        super.init()
-//        locationManager.delegate = self
-//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//    }
-//    
-//    func requestLocation() {
-//        locationManager.requestWhenInUseAuthorization()
-//        locationManager.startUpdatingLocation() // 연속적인 위치 업데이트 시작
-//    }
-//    
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        location = locations.last
-//        manager.stopUpdatingLocation() // 위치를 받았으면 업데이트 중지
-//    }
-//    
-//    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-//        print("Error getting location", error)
-//    }
-//}

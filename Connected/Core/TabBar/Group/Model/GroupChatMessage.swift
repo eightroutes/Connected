@@ -16,4 +16,6 @@ struct GroupChatMessage: Identifiable, Codable {
     let timestamp: Date
     let userName: String
     let userProfileImageUrl: String
+    let imageUrl: String?
+
 }
