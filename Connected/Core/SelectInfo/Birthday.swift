@@ -6,8 +6,14 @@ import FirebaseAuth
 struct Birthday: View {
     
     @State private var showNextScreen = false
-    @State private var selectedDate = Date()
-    
+    @State private var selectedDate: Date = {
+            // 2000년 1월 1일로 초기값 설정
+            var components = DateComponents()
+            components.year = 2000
+            components.month = 1
+            components.day = 1
+            return Calendar.current.date(from: components) ?? Date()}()
+
     let db = Firestore.firestore()
     
     let user: User
@@ -29,10 +35,14 @@ struct Birthday: View {
                     Text("생일이 언제인가요?")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                    DatePicker("Please enter a date", selection: $selectedDate, displayedComponents: .date)
-                        .datePickerStyle(WheelDatePickerStyle())
-                        .labelsHidden()
-                        .padding(.bottom, -50)
+                    DatePicker("",
+                               selection: $selectedDate,
+                               in: ...Date(), // 현재 날짜까지 선택 가능
+                               displayedComponents: .date
+                    )
+                    .datePickerStyle(WheelDatePickerStyle())
+                    .labelsHidden()
+                    .padding(.bottom, -50)
                     Spacer()
                 }
                 .padding(.bottom, 400)
@@ -61,16 +71,6 @@ struct Birthday: View {
                             }
                             
                         }
-                        //                            Task {
-                        //                                do {
-                        //                                    let ref = try await db.collection("users").addDocument(data: [
-                        //                                        "Birthday": selectedDate
-                        //                                    ])
-                        //                                    print("Document added with ID: \(ref.documentID)")
-                        //                                } catch {
-                        //                                    print("Error adding document: \(error)")
-                        //                                }
-                        //                                showNextScreen = true
                     }) {
                         Text("다음")
                             .frame(width: 250)

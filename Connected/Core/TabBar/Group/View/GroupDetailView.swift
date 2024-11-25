@@ -12,60 +12,65 @@ struct GroupDetailView: View {
     @StateObject private var viewModel = GroupDetailViewModel()
 
     var body: some View {
-        VStack(alignment: .leading) {
-            KFImage(URL(string: group.mainImageUrl))
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(height: 400)
-                .clipped()
-
-            Text(group.name)
-                .font(.largeTitle)
-                .bold()
-                .padding(.top)
-
-            Text(group.description)
-                .font(.body)
-                .padding(.top, 5)
-
-            Text("#\(group.theme)")
-            .padding(5)
-            .background(Color.gray.opacity(0.2))
-            .cornerRadius(5)
-         
-
-            Text("위치: \(group.location)")
-                .font(.subheadline)
-                .padding(.top, 5)
-
-            Text("멤버: \(group.memberCounts)명")
-                .font(.subheadline)
-                .padding(.top, 1)
-
-            Spacer()
-
-            Button(action: {
-                joinGroup()
-            }) {
-                Text(viewModel.isMember ? "채팅방 입장" : "모임 참가")
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.brand)
-                    .cornerRadius(10)
-            }
-            .padding(.bottom)
-            .padding(.horizontal)
-            .alert(isPresented: $showErrorAlert) {
-                Alert(
-                    title: Text("오류"),
-                    message: Text(errorMessage),
-                    dismissButton: .default(Text("확인"))
-                )
-            }
-
-            NavigationLink(destination: GroupChatView(group: group), isActive: $showChatView) {
-                EmptyView()
+        ScrollView {
+            VStack(alignment: .leading) {
+                KFImage(URL(string: group.mainImageUrl))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(height: 400)
+                    .clipped()
+                    .padding(.top, 8)
+                
+                VStack(alignment: .leading){
+                    Text(group.name)
+                        .font(.largeTitle)
+                        .bold()
+                        .padding(.top)
+                    
+                    Text(group.description)
+                        .font(.body)
+                        .padding(.top, 5)
+                    
+                    Text("#\(group.theme)")
+                        .padding(5)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(5)
+                    
+                    
+                    Text("위치: \(group.location)")
+                        .font(.subheadline)
+                        .padding(.top, 5)
+                    
+                    Text("멤버: \(group.memberCounts)명")
+                        .font(.subheadline)
+                        .padding(.top, 1)
+                }
+                .padding(.horizontal)
+                
+                Spacer()
+                
+                Button(action: {
+                    joinGroup()
+                }) {
+                    Text(viewModel.isMember ? "채팅방 입장" : "모임 참가")
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.brand)
+                        .cornerRadius(10)
+                }
+                .padding(.all)
+                .alert(isPresented: $showErrorAlert) {
+                    Alert(
+                        title: Text("오류"),
+                        message: Text(errorMessage),
+                        dismissButton: .default(Text("확인"))
+                    )
+                }
+                
+                NavigationLink(destination: GroupChatView(group: group), isActive: $showChatView) {
+                    EmptyView()
+                }
             }
         }
         .padding(.horizontal)
