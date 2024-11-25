@@ -108,7 +108,7 @@ struct LoginView: View {
                 }
                 .padding(.vertical, 16)
             }
-        }
+        }//NavigationStack
         .tint(.black)
     }
 }

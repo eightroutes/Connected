@@ -12,76 +12,79 @@ struct ContentView: View {
     @State private var size = 0.8
     @State private var opacity = 0.1
     @State private var hasImages: Bool? = nil
-
+    
     let db = Firestore.firestore()
     
-//     테스트 시 자동 로그아웃
-//    init() {
-//        AuthService.shared.signOut()
-//    }
+    //     테스트 시 자동 로그아웃
+    //    init() {
+    //        AuthService.shared.signOut()
+    //    }
     
     
     var body: some View {
-            if isActive {
-                Group {
-                    if authService.userSession == nil {
-                        LoginView()
-                            .environmentObject(registrationViewModel)
-                            .environmentObject(loginViewModel)
-                    } else if let currentUser = authService.currentUser {
-                        if let hasImages = hasImages {
-                            if hasImages {
-                                MainView(user: currentUser)
-                            } else {
-                                Name(user: currentUser)
-                            }
+        if isActive {
+            // NavigationStack -> Group으로 바꾸니 NTitle이 제대로 나옴
+            Group {
+                if authService.userSession == nil {
+                    LoginView()
+                        .tint(.black)
+                        .environmentObject(registrationViewModel)
+                        .environmentObject(loginViewModel)
+                } else if let currentUser = authService.currentUser {
+                    if let hasImages = hasImages {
+                        if hasImages {
+                            
+                            MainView(user: currentUser)
                         } else {
-                            // 사용자 데이터 로딩 중
-                            Image(systemName: "slowmo")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                                .symbolEffect(.variableColor)
-                                .onAppear {
-                                    loadUserData()
-                                }
+                            Name(user: currentUser)
                         }
-                    }
-                }
-                .onAppear {
-                    if hasImages == nil, let currentUser = authService.currentUser {
-                        checkForOtherImages(userId: currentUser.id ?? "")
-                    }
-                }
-                .onChange(of: authService.currentUser) { newCurrentUser in
-                    if let user = newCurrentUser {
-                        checkForOtherImages(userId: user.id ?? "")
-                    }
-                }
-                
-            }else {
-                VStack {
-                    VStack {
-                        Image("SplashLogo")
-                    }
-                    .scaleEffect(size)
-                }
-                .tint(.black)
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        withAnimation {
-                            self.isActive = true
-                            //                        if let currentUser = authService.currentUser {
-                            //                            checkForOtherImages(userId: currentUser.id)
-                            //                        }
-                            if authService.userSession != nil && authService.currentUser == nil {
+                    } else {
+                        // 사용자 데이터 로딩 중
+                        Image(systemName: "slowmo")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .symbolEffect(.variableColor)
+                            .onAppear {
                                 loadUserData()
                             }
+                    }
+                }
+            }
+            .onAppear {
+                if hasImages == nil, let currentUser = authService.currentUser {
+                    checkForOtherImages(userId: currentUser.id ?? "")
+                }
+            }
+            .onChange(of: authService.currentUser) { newCurrentUser in
+                if let user = newCurrentUser {
+                    checkForOtherImages(userId: user.id ?? "")
+                }
+            }
+            
+        }else {
+            VStack {
+                VStack {
+                    Image("SplashLogo")
+                }
+                .scaleEffect(size)
+            }
+            .tint(.black)
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    withAnimation {
+                        self.isActive = true
+                        //                        if let currentUser = authService.currentUser {
+                        //                            checkForOtherImages(userId: currentUser.id)
+                        //                        }
+                        if authService.userSession != nil && authService.currentUser == nil {
+                            loadUserData()
                         }
                     }
                 }
-                .tint(.black)
-
             }
+            .tint(.black)
+            
+        }
         
     }
     

@@ -66,6 +66,9 @@ struct EmailRegisterView: View {
                         .cornerRadius(30)
                 }
                 .disabled(!(isValidEmail(viewModel.email) && isValidPassword(viewModel.password)))
+                .navigationDestination(isPresented: $showAlert) {
+                    LoginView()
+                }
                 
                 Spacer()
                 // 오류메시지

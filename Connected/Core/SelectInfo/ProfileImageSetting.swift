@@ -29,7 +29,7 @@ struct ProfileImageSetting: View {
                             .opacity(0.2)
                     }
                     
-                    Text("프로필을 설정해주세요")
+                    Text("프로필을 설정해 주세요")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding(.top, 40)

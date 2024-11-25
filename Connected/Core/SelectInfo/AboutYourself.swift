@@ -262,7 +262,7 @@ struct colorButton: View {
                 .frame(width: 50, height: 5)
                 .padding()
                 .foregroundColor((selectedColor == color ? colorCode : .unselected))
-                .background(Color.clear)
+                .background(Color.gray.opacity(0.04))
                 .cornerRadius(30)
                 .overlay(
                     RoundedRectangle(cornerRadius: 30).stroke((selectedColor == color ? colorCode : .unselected), lineWidth: 2) // 테두리 색상과 두께 설정

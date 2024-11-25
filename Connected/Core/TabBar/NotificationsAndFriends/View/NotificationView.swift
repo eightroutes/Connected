@@ -82,6 +82,7 @@ struct NotificationView: View {
             //
             //        }//NavigationStack
             .navigationBarTitle("알림")
+            .navigationBarTitleDisplayMode(.large)
             .onAppear {
                 if let userId = Auth.auth().currentUser?.uid {
                     friendRequestViewModel.fetchFriendRequestsSent(by: userId)

@@ -13,20 +13,29 @@ struct MainView: View {
                 ZStack {
                     switch selectedTab {
                     case 0:
-                       ZStack(alignment: .topLeading) {
-                           MainMap()
-                           ProfileView(user: user)
-                               .padding(.leading, 20)
-                               .padding(.top, 10)
-                       }
+                        ZStack(alignment: .topLeading) {
+                            MainMap()
+                            ProfileView(user: user)
+                                .padding(.leading, 20)
+                                .padding(.top, 10)
+                        }
                     case 1:
-                        GroupView()
+                        NavigationView {
+                            GroupView()
+                        }
+                        
                     case 2:
-                        ConnectFriends()
+                        NavigationView {
+                            ConnectFriends()
+                        }
                     case 3:
-                        MainMessagesView(user: user)
+                        NavigationView {
+                            MainMessagesView(user: user)
+                        }
                     default:
-                        SettingsAndInfo(currentUser: user)
+                        NavigationView {
+                            SettingsAndInfo(currentUser: user)
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -40,8 +49,7 @@ struct MainView: View {
         }
         .navigationBarHidden(true)
         .tint(.black)
-        .navigationBarTitleDisplayMode(.inline)
-
+        
     }
 }
 
@@ -109,7 +117,7 @@ struct CustomTabBar: View {
         }
         .padding(.horizontal, 24)
         .frame(maxWidth: .infinity)
-        .background(Color.white) 
+        .background(Color.white)
     }
 }
 

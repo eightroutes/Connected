@@ -6,7 +6,6 @@ struct GroupView: View {
     @State private var groups: [Groups] = Groups.MOCK_GROUPS // 그룹 목록 관리
     
     var body: some View {
-        // 최상위 NavigationStack을 제거하고 상위에서 관리
         VStack {
             CustomTopBar(selectedTab: $selectedTab)
             
@@ -44,7 +43,7 @@ struct CustomTopBar: View {
                     Rectangle()
                         .frame(height: 2)
                         .foregroundStyle(selectedTab == 0 ? .black : .gray.opacity(0.5))
-
+                    
                 }
             }
             
@@ -58,10 +57,10 @@ struct CustomTopBar: View {
                     Rectangle()
                         .frame(height: 2)
                         .foregroundStyle(selectedTab == 1 ? .black : .gray.opacity(0.5))
-
+                    
                 }
             }
-
+            
         }
         .padding(.horizontal, 24)
         .frame(maxWidth: .infinity)

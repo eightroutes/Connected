@@ -36,7 +36,7 @@ struct SetImages: View {
                     }
                     
                     Spacer()
-                    Text("사진을 추가하세요")
+                    Text("사진을 추가해 보세요")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                     Spacer()
@@ -113,6 +113,7 @@ struct SetImages: View {
                     {
                         MainView(user: user)
                     }
+                    
                 }
                 
             }
@@ -122,6 +123,7 @@ struct SetImages: View {
             }
         }//NavigationStack
         .tint(.black)
+        
     }
     
     func uploadImages() {

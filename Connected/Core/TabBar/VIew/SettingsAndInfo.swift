@@ -12,7 +12,6 @@ struct SettingsAndInfo: View {
     
         
     var body: some View {
-        NavigationStack {
             VStack(spacing: 0) {
                 List {
                     NavigationLink(destination: ProfileDetail(user: currentUser)) {
@@ -68,7 +67,6 @@ struct SettingsAndInfo: View {
                 
                 
             }
-        }//NavigationStack
         
         
     }

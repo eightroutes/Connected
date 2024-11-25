@@ -12,7 +12,7 @@ struct MyGroupView: View {
     @StateObject private var viewModel = MyGroupViewModel()
 
     var body: some View {
-        Group {
+        NavigationStack {
             if viewModel.isLoading {
                 // 로딩 상태 표시
                 ProgressView("로딩 중...")

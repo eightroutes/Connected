@@ -16,7 +16,6 @@ struct MainMessagesView: View {
     }
     
     var body: some View {
-        NavigationStack {
             VStack {
                 messagesView
             }
@@ -32,7 +31,7 @@ struct MainMessagesView: View {
                     ProfileDetail(user: user)
                 }
             }
-        }
+        
     }
     
     private var messagesView: some View {
