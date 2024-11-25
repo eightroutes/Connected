@@ -40,23 +40,6 @@ struct ProfileDetail: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
                         HStack(spacing: 20) {
-                            // 프로필 이미지
-                            //                                if let profileImageUrl = viewModel.profileImageUrl {
-                            //                                    KFImage(URL(string: profileImageUrl))
-                            //                                        .resizable()
-                            //                                        .clipShape(Circle())
-                            //                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                            //                                        .shadow(radius: 1)
-                            //                                        .frame(width: 50, height: 50)
-                            //                                } else {
-                            //                                    Image(systemName: "person.circle.fill")
-                            //                                        .resizable()
-                            //                                        .clipShape(Circle())
-                            //                                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                            //                                        .shadow(radius: 1)
-                            //                                        .frame(width: 50, height: 50)
-                            //                                        .foregroundColor(.gray)
-                            //                                }
                             
                             Text(viewModel.userName)
                                 .font(.title)
@@ -93,7 +76,7 @@ struct ProfileDetail: View {
                                         
                                     }) {
                                         Image(systemName: "person.badge.plus")
-                                            .font(.title3)
+                                            .font(.title)
                                     }
                                     .alert("친구 추가", isPresented: $showAlert) {
 
@@ -104,14 +87,14 @@ struct ProfileDetail: View {
                                     // 친구추가 버튼 (비활성화 및 회색)
                                     Button(action: {}) {
                                         Image(systemName: "person.badge.plus")
-                                            .font(.title3)
+                                            .font(.title)
                                             .foregroundColor(.gray)
                                     }
                                     .disabled(true)
                                 case .friends:
                                     // 이미 친구인 경우 다른 표시를 할 수 있습니다.
                                     Text("친구입니다")
-                                        .font(.title3)
+                                        .font(.title)
                                         .foregroundColor(.green)
                                 }
                                 
@@ -120,7 +103,7 @@ struct ProfileDetail: View {
                                     showMessageView = true
                                 }) {
                                     Image(systemName: "plus.message")
-                                        .font(.title3)
+                                        .font(.title)
                                 }
                                 
                             }

@@ -33,16 +33,7 @@ struct FriendsListView: View {
                             
                             Spacer()
                             
-                            // 메시지 버튼
-                            Button(action: {
-                                showMessageView = true
-                            }) {
-                                Image(systemName: "plus.message")
-                                    .font(.title3)
-                            }
-                            .navigationDestination(isPresented: $showMessageView){
-                                ChatLogView(user: friend)
-                            }
+                            
                             Button(action: {
                                 selectedFriend = friend
                                 showActionSheet = true
