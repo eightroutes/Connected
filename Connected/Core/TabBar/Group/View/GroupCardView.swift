@@ -12,8 +12,6 @@ struct GroupCardView: View {
     let group: Groups
     
     var body: some View {
-        NavigationStack {
-            NavigationLink(destination: GroupDetailView(group: group)) {
                 HStack(alignment: .top) {
                     KFImage(URL(string: group.mainImageUrl))
                         .resizable()
@@ -55,13 +53,9 @@ struct GroupCardView: View {
                 .background(Color.white)
                 .cornerRadius(12)
                 .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-                .onTapGesture {
-                    
-                }
             }
         }
-    }
-}
+    
 
 #Preview {
     GroupCardView(group: Groups.MOCK_GROUPS[0])

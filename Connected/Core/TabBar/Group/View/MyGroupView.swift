@@ -10,7 +10,7 @@ import Kingfisher
 
 struct MyGroupView: View {
     @StateObject private var viewModel = MyGroupViewModel()
-
+    
     var body: some View {
         NavigationStack {
             if viewModel.isLoading {
@@ -43,7 +43,9 @@ struct MyGroupView: View {
                 ScrollView {
                     VStack(spacing: 15) {
                         ForEach(viewModel.myGroups) { group in
-                            GroupCardView(group: group)
+                            NavigationLink(destination: GroupDetailView(group: group)) {
+                                GroupCardView(group: group)
+                            }
                         }
                     }
                     .padding(.horizontal)

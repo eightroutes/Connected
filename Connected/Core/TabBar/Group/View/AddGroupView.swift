@@ -19,6 +19,8 @@ struct AddGroupView: View {
     @State private var showingCropView = false
     @State private var showAlert = false
     @State private var errorMessage = ""
+    @State private var isCreatingGroup = false
+
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -156,7 +158,7 @@ struct AddGroupView: View {
                             .background(isValidInput() ? Color.brand : Color.secondary)
                             .cornerRadius(30)
                     }
-                    .disabled(!isValidInput())
+                    .disabled(!isValidInput() || isCreatingGroup)
                     .alert(isPresented: $showAlert) {
                         Alert(title: Text("모임 생성 완료"), message: Text("모임이 성공적으로 생성되었습니다."), dismissButton: .default(Text("확인")) {
                             // 현재 뷰 닫기
@@ -182,7 +184,9 @@ struct AddGroupView: View {
     
     // 그룹 생성 함수
     private func createGroup() {
+        isCreatingGroup = true // 그룹 생성 시작
         vm.createGroup(name: groupName, description: groupDescription, theme: theme, location: locationText, image: groupImage) { success, error in
+            isCreatingGroup = false // 그룹 생성 완료 또는 실패 시
             if success {
                 showAlert = true
                 // 입력 필드 초기화
