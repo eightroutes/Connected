@@ -9,16 +9,19 @@ struct LoginView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Image("SplashLogo")
-                    .resizable()
-                    .frame(width: 190, height: 119.19)
-                    .padding(.top, 200.0)
                 
-                Text("CONNECTED")
-                    .padding(.top, 10)
-                    .fontWeight(.bold)
-                    .font(.title)
-                
+                VStack {
+                    Image("SplashLogo")
+                        .resizable()
+                        .frame(width: 190, height: 119.19)
+                        .padding(.top, 200.0)
+                    
+                    Text("CONNECTED")
+                        .padding(.top, 10)
+                        .fontWeight(.bold)
+                        .font(.title)
+                    
+                }
                 Spacer()
                     .frame(height: 30)
                 
@@ -31,52 +34,57 @@ struct LoginView: View {
                         .modifier(TextFieldModifier())
                 }
                 
-                Button {
-                    Task {
-                        do {
-                            try await viewModel.signIn()
+                
+                VStack {
+                    Button {
+                        Task {
+                            do {
+                                try await viewModel.signIn()
+                            }
+                            catch {
+                                
+                            }
                         }
-                        catch {
-                            
-                        }
+                    } label: {
+                        Text("로그인")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.white)
+                            .frame(width: 250, height: 44)
+                            .background(Color.brand)
+                            .cornerRadius(8)
                     }
-                } label: {
-                    Text("로그인")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.white)
-                        .frame(width: 250, height: 44)
-                        .background(Color.brand)
-                        .cornerRadius(8)
-                }
-                .padding(.vertical)
-                
-                // 오류메시지
-                if let errorMessage = viewModel.errorMessage {
-                  Text(errorMessage)
-                      .foregroundColor(.red)
-                      .font(.footnote)
-                      .padding(.top, 5)
-                      .onAppear {
-                          // 3초 후 errorMessage를 자동으로 사라지게 함
-                          DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                              viewModel.errorMessage = nil
-                          }
-                      }
-                }
-                
-                
-                HStack {
-                    Rectangle()
-                        .frame(width: (UIScreen.main.bounds.width / 2) - 80, height: 0.5)
-                    Text("OR")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
+                    .padding(.vertical)
                     
-                    Rectangle()
-                        .frame(width: (UIScreen.main.bounds.width / 2) - 80, height: 0.5)
+                    // 오류메시지
+                    if let errorMessage = viewModel.errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .font(.footnote)
+                            .padding(.top, 5)
+                            .onAppear {
+                                // 3초 후 errorMessage를 자동으로 사라지게 함
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    viewModel.errorMessage = nil
+                                }
+                            }
+                    }
                 }
-                .foregroundStyle(.gray)
+                
+                
+                VStack {
+                    HStack {
+                        Rectangle()
+                            .frame(width: (UIScreen.main.bounds.width / 2) - 80, height: 0.5)
+                        Text("OR")
+                            .font(.footnote)
+                            .fontWeight(.semibold)
+                        
+                        Rectangle()
+                            .frame(width: (UIScreen.main.bounds.width / 2) - 80, height: 0.5)
+                    }
+                    .foregroundStyle(.gray)
+                }
                 
                 VStack {
                     Button {
@@ -110,7 +118,7 @@ struct LoginView: View {
             }
         }//NavigationStack
         .tint(.black)
-        .ignoresSafeArea(.keyboard)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
 

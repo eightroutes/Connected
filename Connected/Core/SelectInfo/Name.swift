@@ -10,7 +10,7 @@ struct Name: View {
     let db = Firestore.firestore()
     
     let user: User
-
+    
     
     var body: some View {
         NavigationStack {
@@ -25,36 +25,38 @@ struct Name: View {
                             .opacity(0.2)
                     }
                     .padding(.top, 40)
+                    .padding(.bottom, 60)
+                    
+                
+                    VStack {
+                        
+                        Text("이름이 무엇인가요?")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .padding(.bottom, 60)
+                        HStack {
+                            TextField("이름을 입력하세요", text: $inputName)
+                                .padding(.leading, 70.0)
+                                .onChange(of: inputName) { newValue in
+                                    if newValue.count > 10 {
+                                        inputName = String(newValue.prefix(10))
+                                    }
+                                }
+                            
+                            Text("\(inputName.count)/10자")
+                                .foregroundColor(.gray.opacity(0.5))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.footnote)
+                                .padding(.leading, 80)
+                        }
+                        
+                        Rectangle()
+                            .frame(width: 250, height: 0.5)
+                        
+                    }
                     
                     Spacer()
-                    Text("이름이 무엇인가요?")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                    Spacer()
-                    HStack {
-                        TextField("이름을 입력하세요", text: $inputName)
-                            .padding(.leading, 70.0)
-                            .onChange(of: inputName) { newValue in
-                                if newValue.count > 10 {
-                                    inputName = String(newValue.prefix(10))
-                                }
-                            }
-                        
-                        Text("\(inputName.count)/10자")
-                            .foregroundColor(.gray.opacity(0.5))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.footnote)
-                            .padding(.leading, 80)
-                    }
-
-                    Rectangle()
-                        .frame(width: 250, height: 0.5)
-                    Spacer()
-                }
-                .padding(.bottom, 400)
-                
-                VStack {
-                    Spacer()
+                    
                     Button(action: {
                         Task {
                             do {
@@ -90,13 +92,14 @@ struct Name: View {
                         Birthday(user: user)
                     }
                     
+                    
                 }
-                .navigationBarBackButtonHidden(true)
             }
         }//NavigationStack
+        .navigationBarBackButtonHidden(true)
         .tint(.black)
         .ignoresSafeArea(.keyboard)
-
+        
     }
     
 }

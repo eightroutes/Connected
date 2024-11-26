@@ -16,8 +16,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         
         
-//        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.resignOnTouchOutside = true
+        IQKeyboardManager.shared.layoutIfNeededOnUpdate = false
+        
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 0
         
         
         return true
