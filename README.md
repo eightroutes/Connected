@@ -1,9 +1,5 @@
 
 
-개발 중 
----
-
-
 
 
 # CONNECTED
@@ -32,3 +28,7 @@
 - CoreLocation
 
 ---
+### 📋 상세
+![CNTD_Connected포스터](https://github.com/user-attachments/assets/ca685548-b71b-45e9-81ac-9b720534d647)
+
+
