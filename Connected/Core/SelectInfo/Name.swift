@@ -91,12 +91,14 @@ struct Name: View {
                     }
                     
                 }
-//                .ignoresSafeArea(.keyboard)
                 .navigationBarBackButtonHidden(true)
             }
         }//NavigationStack
         .tint(.black)
+        .ignoresSafeArea(.keyboard)
+
     }
+    
 }
 
 #Preview {

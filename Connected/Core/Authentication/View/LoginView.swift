@@ -110,6 +110,7 @@ struct LoginView: View {
             }
         }//NavigationStack
         .tint(.black)
+        .ignoresSafeArea(.keyboard)
     }
 }
 

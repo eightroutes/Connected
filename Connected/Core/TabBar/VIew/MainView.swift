@@ -17,11 +17,13 @@ struct MainView: View {
                 ZStack {
                     switch selectedTab {
                     case 0:
-                        ZStack(alignment: .topLeading) {
-                            MainMap()
-                            ProfileView(user: user)
-                                .padding(.leading, 20)
-                                .padding(.top, 10)
+                        NavigationView{
+                            ZStack(alignment: .topLeading) {
+                                MainMap()
+                                ProfileView(user: user)
+                                    .padding(.leading, 20)
+                                    .padding(.top, 10)
+                            }
                         }
                     case 1:
                         NavigationView {
