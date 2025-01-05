@@ -28,6 +28,7 @@
 - Firebase
 - MapKit
 - CoreLocation
+- Combine
 
 ---
 ### 📋 상세
@@ -49,7 +50,6 @@
     <img src="https://github.com/user-attachments/assets/236c613b-c566-4f02-9199-0f94c9e06c70" width="200" alt="u7"/>
 </p>
 
----
 
 #### 2. 지도 기반 상호작용
 지도를 기반으로 다른 유저와 메시지를 주고받거나, 친구추가를 하는 등의 상호작용을 할 수 있습니다.
@@ -61,7 +61,6 @@
     <img src="https://github.com/user-attachments/assets/2f033848-eb70-453c-9651-c8d00f429bba" width="200" alt="m5"/>
 </p>
 
----
 
 #### 3. 맞춤형 매칭 
 MBTI, 관심사, 좋아하는 색, 음악, 영화 등을 고려하여 본인과 가장 비슷한 유저를 매칭해줍니다.
@@ -69,7 +68,6 @@ MBTI, 관심사, 좋아하는 색, 음악, 영화 등을 고려하여 본인과 
     <img src="https://github.com/user-attachments/assets/6151be7e-c37b-44a9-b76e-d9e30ad4eb35" width="200" alt="match"/>
 </p>
 
----
 
 #### 4. 관심사 기반 모임
 모임 탭에서 관심사가 같은 사람들끼리 소통을 할 수 있습니다.
